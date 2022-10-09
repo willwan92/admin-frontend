@@ -28,7 +28,14 @@ export interface IAsyncRouteState {
   isDynamicAddedRoute: boolean;
 }
 
-function filter<T = any>(
+/**
+ * 过滤账户拥有权限的路由
+ * @param tree 路由树
+ * @param func 判断是否有路由权限的函数
+ * @param config 路由树配置
+ * @returns 返回账户拥有权限的路由
+ */
+function filterAsyncRoutes<T = any>(
   tree: T[],
   func: (n: T) => boolean,
   config: Partial<TreeHelperConfig> = {}
@@ -40,6 +47,7 @@ function filter<T = any>(
     return list
       .map((node: any) => ({ ...node }))
       .filter((node) => {
+        // 若有子节点，递归判断子节点路由的权限；否则判断当前节点的路由权限
         node[children] = node[children] && listFilter(node[children]);
         return func(node) || (node[children] && node[children].length);
       });
@@ -86,10 +94,15 @@ export const useAsyncRouteStore = defineStore({
       // 设置需要缓存的组件
       this.keepAliveComponents = compNames;
     },
-    async generateRoutes(data) {
-      let accessedRouters;
-      const permissionsList = data.permissions || [];
-      const routeFilter = (route) => {
+    /**
+     * 生成路由
+     * @param userInfo 用户信息
+     * @returns 返回用户有权限的路由
+     */
+    async generateRoutes(userInfo) {
+      let accessedRoutes;
+      const permissionsList = userInfo.permissions || [];
+      const hasPermission = (route) => {
         const { meta } = route;
         const { permissions } = meta || {};
         if (!permissions) return true;
@@ -100,22 +113,22 @@ export const useAsyncRouteStore = defineStore({
       if (permissionMode === 'BACK') {
         // 动态获取菜单
         try {
-          accessedRouters = await generatorDynamicRouter();
+          accessedRoutes = await generatorDynamicRouter();
         } catch (error) {
           console.log(error);
         }
       } else {
         try {
-          //过滤账户是否拥有某一个权限，并将菜单从加载列表移除
-          accessedRouters = filter(asyncRoutes, routeFilter);
+          //过滤账户拥有权限的路由
+          accessedRoutes = filterAsyncRoutes(asyncRoutes, hasPermission);
         } catch (error) {
           console.log(error);
         }
       }
-      accessedRouters = accessedRouters.filter(routeFilter);
-      this.setRouters(accessedRouters);
-      this.setMenus(accessedRouters);
-      return toRaw(accessedRouters);
+      accessedRoutes = accessedRoutes.filter(hasPermission);
+      this.setRouters(accessedRoutes);
+      this.setMenus(accessedRoutes);
+      return toRaw(accessedRoutes);
     },
   },
 });
