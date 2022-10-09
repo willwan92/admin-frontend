@@ -9,8 +9,6 @@ import { storage } from '@/utils/Storage';
 export interface IUserState {
   token: string;
   username: string;
-  welcome: string;
-  avatar: string;
   permissions: any[];
   info: any;
 }
@@ -20,17 +18,12 @@ export const useUserStore = defineStore({
   state: (): IUserState => ({
     token: storage.get(ACCESS_TOKEN, ''),
     username: '',
-    welcome: '',
-    avatar: '',
     permissions: [],
     info: storage.get(CURRENT_USER, {}),
   }),
   getters: {
     getToken(): string {
       return this.token;
-    },
-    getAvatar(): string {
-      return this.avatar;
     },
     getNickname(): string {
       return this.username;
@@ -46,9 +39,6 @@ export const useUserStore = defineStore({
     setToken(token: string) {
       this.token = token;
     },
-    setAvatar(avatar: string) {
-      this.avatar = avatar;
-    },
     setPermissions(permissions) {
       this.permissions = permissions;
     },
@@ -56,7 +46,7 @@ export const useUserStore = defineStore({
       this.info = info;
     },
     //获取用户列表
-    async getUserList(){
+    async getUserList() {
       try {
         const response = await getUserList();
         return Promise.resolve(response);
@@ -85,19 +75,18 @@ export const useUserStore = defineStore({
 
     // 获取用户信息
     GetInfo() {
-      const that = this;
       return new Promise((resolve, reject) => {
-        getUserInfo()
+        getUserInfo(this.info.userId)
           .then((res) => {
             const result = res;
-            if (result.permissions && result.permissions.length) {
-              const permissionsList = result.permissions;
-              that.setPermissions(permissionsList);
-              that.setUserInfo(result);
+            if (result.role) {
+              const permissionsList = [result.role];
+              this.setPermissions(permissionsList);
+              this.setUserInfo(result);
             } else {
-              reject(new Error('getInfo: permissionsList must be a non-null array !'));
+              reject(new Error('getInfo: role must be a non-null!'));
             }
-            that.setAvatar(result.avatar);
+            // this.setAvatar(result.avatar);
             resolve(res);
           })
           .catch((error) => {
