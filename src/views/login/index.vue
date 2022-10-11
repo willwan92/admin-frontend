@@ -38,6 +38,15 @@
               </template>
             </n-input>
           </n-form-item>
+          <n-form-item path="captcha">
+            <n-input v-model:value="formInline.captcha" placeholder="请输入验证码"></n-input>
+            <img
+              class="captcha-img"
+              @click="refreshCaptach"
+              :src="formInline.captchaUrl"
+              title="点击刷新"
+            />
+          </n-form-item>
           <!-- <n-form-item path="verification">
             <n-input v-model:value="formInline.username" placeholder="请输入验证码">
               <template #prefix>
@@ -59,131 +68,135 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, onBeforeMount } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { useUserStore } from '@/store/modules/user';
-  import { useMessage } from 'naive-ui';
-  import { ResultEnum } from '@/enums/httpEnum';
-  import { PersonOutline, LockClosedOutline } from '@vicons/ionicons5';
-  import { PageEnum } from '@/enums/pageEnum';
-  import { websiteConfig } from '@/config/website.config';
-  import { getCaptcha } from '@/api/auth';
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/store/modules/user';
+import { useMessage } from 'naive-ui';
+import { ResultEnum } from '@/enums/httpEnum';
+import { PersonOutline, LockClosedOutline } from '@vicons/ionicons5';
+import { PageEnum } from '@/enums/pageEnum';
+import { websiteConfig } from '@/config/website.config';
 
-  onBeforeMount(() => {
-    getCaptcha()
-  })
+interface FormState {
+  username: string;
+  password: string;
+  captcha: string;
+}
 
-  interface FormState {
-    username: string;
-    password: string;
-  }
+const formRef = ref();
+const message = useMessage();
+const loading = ref(false);
+const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
-  const formRef = ref();
-  const message = useMessage();
-  const loading = ref(false);
-  const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
+const formInline = reactive({
+  username: 'admin',
+  password: 'admin@123',
+  captcha: '',
+  captchaUrl: '/api/auth/captcha',
+});
 
-  const formInline = reactive({
-    username: 'admin',
-    password: 'admin@123',
-    isCaptcha: true,
-  });
+const rules = {
+  username: { required: true, message: '请输入用户名', trigger: 'blur' },
+  password: { required: true, message: '请输入密码', trigger: 'blur' },
+  captcha: { required: true, message: '请输入验证码', trigger: 'blur' },
+};
 
-  const rules = {
-    username: { required: true, message: '请输入用户名', trigger: 'blur' },
-    password: { required: true, message: '请输入密码', trigger: 'blur' },
-  };
+const userStore = useUserStore();
 
-  const userStore = useUserStore();
+const router = useRouter();
+const route = useRoute();
+const refreshCaptach = () => {
+  formInline.captchaUrl = `/api/auth/captcha?t=${Date.now()}`;
+};
+const handleSubmit = (e) => {
+  e.preventDefault();
+  formRef.value.validate(async (errors) => {
+    if (!errors) {
+      const { username, password, captcha } = formInline;
+      message.loading('登录中...');
+      loading.value = true;
 
-  const router = useRouter();
-  const route = useRoute();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    formRef.value.validate(async (errors) => {
-      if (!errors) {
-        const { username, password } = formInline;
-        message.loading('登录中...');
-        loading.value = true;
-
-        const params: FormState = {
-          username,
-          password,
-        };
-        try {
-          const { code } = await userStore.login(params);
-          message.destroyAll();
-          if (code == ResultEnum.SUCCESS) {
-            const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
-            message.success('登录成功，即将进入系统');
-            if (route.name === LOGIN_NAME) {
-              router.replace('/');
-            } else {
-              router.replace(toPath);
-            }
+      const params: FormState = {
+        username,
+        password,
+        captcha,
+      };
+      try {
+        const { code } = await userStore.login(params);
+        message.destroyAll();
+        if (code == ResultEnum.SUCCESS) {
+          const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
+          message.success('登录成功，即将进入系统');
+          if (route.name === LOGIN_NAME) {
+            router.replace('/');
           } else {
-            message.info('登录失败');
+            router.replace(toPath);
           }
-        } finally {
-          loading.value = false;
+        } else {
+          message.info('登录失败');
         }
-      } else {
-        message.error('请填写完整信息，并且进行验证码校验');
+      } finally {
+        loading.value = false;
       }
-    });
-  };
+    } else {
+      message.error('请填写完整信息，并且进行验证码校验');
+    }
+  });
+};
 </script>
 
 <style lang="less" scoped>
-  .view-account {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: auto;
+.view-account {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
 
-    &-container {
-      flex: 1;
-      padding: 32px 12px;
-      max-width: 384px;
-      min-width: 320px;
-      margin: 0 auto;
+  &-container {
+    flex: 1;
+    padding: 32px 12px;
+    max-width: 384px;
+    min-width: 320px;
+    margin: 0 auto;
+  }
+
+  &-top {
+    padding: 32px 0;
+    text-align: center;
+    margin-bottom: 30px;
+
+    &-logo img {
+      display: inline-block;
+      width: 240px;
     }
+  }
 
-    &-top {
-      padding: 32px 0;
-      text-align: center;
-      margin-bottom: 30px;
-      
-      &-logo img {
-        display: inline-block;
-        width: 240px;
-      }
-    }
+  &-other {
+    width: 100%;
+  }
 
-    &-other {
-      width: 100%;
-    }
-
-    .default-color {
+  .default-color {
+    color: #515a6e;
+    .ant-checkbox-wrapper {
       color: #515a6e;
-
-      .ant-checkbox-wrapper {
-        color: #515a6e;
-      }
     }
   }
-
-  @media (min-width: 768px) {
-    .view-account {
-      background-image: url('../../assets/images/login.svg');
-      background-repeat: no-repeat;
-      background-position: 50%;
-      background-size: 100%;
-    }
-
-    .page-account-container {
-      padding: 32px 0 24px 0;
-    }
+  .captcha-img {
+    width: 118px;
+    margin-left: 10px;
   }
+}
+
+@media (min-width: 768px) {
+  .view-account {
+    background-image: url('../../assets/images/login.svg');
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: 100%;
+  }
+
+  .page-account-container {
+    padding: 32px 0 24px 0;
+  }
+}
 </style>
