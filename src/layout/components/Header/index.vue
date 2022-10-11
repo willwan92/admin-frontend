@@ -7,7 +7,6 @@
     >
       <div class="logo" v-if="navMode === 'horizontal'">
         <img :src="websiteConfig.logo" alt="" />
-        <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2>
       </div>
       <AsideMenu
         v-model:collapsed="collapsed"
@@ -276,17 +275,6 @@
       // 图标列表
       const iconList = [
         {
-          icon: 'SearchOutlined',
-          tips: '搜索',
-        },
-        {
-          icon: 'GithubOutlined',
-          tips: 'github',
-          eventObject: {
-            click: () => window.open('https://github.com/jekip/naive-ui-admin'),
-          },
-        },
-        {
           icon: 'LockOutlined',
           tips: '锁屏',
           eventObject: {
@@ -375,10 +363,6 @@
           width: auto;
           height: 32px;
           margin-right: 10px;
-        }
-
-        .title {
-          margin-bottom: 0;
         }
       }
 

@@ -3,7 +3,6 @@
     <!-- <img :src="websiteConfig.logo" alt="" :class="{ 'mr-2': !collapsed }" />
     <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2> -->
     <img :src="websiteConfig.logo" alt="" class="mr-2" />
-    <h2 class="title">{{ websiteConfig.title }}</h2>
   </div>
 </template>
 
@@ -29,6 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 200px;
     height: 64px;
     line-height: 64px;
     overflow: hidden;
@@ -36,7 +36,7 @@
 
     img {
       width: auto;
-      height: 32px;
+      height: 48px;
     }
 
     .title {
