@@ -3,7 +3,8 @@ import { store } from '@/store';
 import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-types';
 import { ResultEnum } from '@/enums/httpEnum';
 
-import { getUserInfo, login, getUserList } from '@/api/system/user';
+import { login } from '@/api/auth';
+import { getUserInfo, getUserList } from '@/api/system/user';
 import { storage } from '@/utils/Storage';
 
 export interface IUserState {
