@@ -62,7 +62,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // proxy: createProxy(VITE_PROXY),
       proxy: {
         '/api': {
-          target: 'http://222.128.6.205:10443',
+          target: 'http://222.128.6.205:10444',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
