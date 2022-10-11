@@ -12,6 +12,7 @@ import { useGlobSetting } from '@/hooks/setting';
 import { isString } from '@/utils/is/';
 import { deepMerge, isUrl } from '@/utils';
 import { setObjToUrlParams } from '@/utils/urlUtils';
+import { storage } from '@/utils/Storage';
 
 import { RequestOptions, Result, CreateAxiosOptions } from './types';
 
@@ -21,7 +22,6 @@ const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix || '';
 
 import router from '@/router';
-import { storage } from '@/utils/Storage';
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -168,6 +168,7 @@ const transform: AxiosTransform = {
         config.params = undefined;
       }
     }
+
     return config;
   },
 
@@ -184,6 +185,12 @@ const transform: AxiosTransform = {
         ? `${options.authenticationScheme} ${token}`
         : token;
     }
+
+    
+    // 从cookie中获取csrfToken
+    const csrfToken = storage.getCookie('csrfToken')
+    config.headers['x-csrf-token'] = csrfToken || '';
+
     return config;
   },
 
