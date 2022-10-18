@@ -8,6 +8,10 @@ export const basicProps = {
     type: String,
     default: null,
   },
+  toolbarShow:{
+    type:Boolean,
+    default:true
+  },
   titleTooltip: {
     type: String,
     default: null,

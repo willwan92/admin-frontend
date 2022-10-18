@@ -234,7 +234,7 @@
 
     .layout-content {
       flex: auto;
-      min-height: 100vh;
+      min-height:calc(100vh - 64px);
     }
 
     .n-layout-header.n-layout-header--absolute-positioned {

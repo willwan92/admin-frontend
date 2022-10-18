@@ -18,7 +18,7 @@
       <slot name="tableTitle"></slot>
     </div>
 
-    <div class="flex items-center table-toolbar-right">
+    <div v-if="toolbarShow" class="flex items-center table-toolbar-right">
       <!--顶部右侧区域-->
       <slot name="toolbar"></slot>
 

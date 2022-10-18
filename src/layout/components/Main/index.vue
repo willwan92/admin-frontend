@@ -1,5 +1,5 @@
 <template>
-  <RouterView>
+  <RouterView :key="$route.fullPath">
     <template #default="{ Component, route }">
       <transition :name="getTransitionName" mode="out-in" appear>
         <keep-alive v-if="keepAliveComponents" :include="keepAliveComponents">
@@ -15,7 +15,6 @@
   import { defineComponent, computed, unref } from 'vue';
   import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
-
   export default defineComponent({
     name: 'MainView',
     components: {},

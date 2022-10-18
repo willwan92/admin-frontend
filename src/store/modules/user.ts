@@ -3,7 +3,7 @@ import { store } from '@/store';
 import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-types';
 import { ResultEnum } from '@/enums/httpEnum';
 
-import { login } from '@/api/auth';
+import { login,logoutReq } from '@/api/auth';
 import { getUserInfo, getUserList } from '@/api/system/user';
 import { storage } from '@/utils/Storage';
 
@@ -98,6 +98,7 @@ export const useUserStore = defineStore({
 
     // 登出
     async logout() {
+      await logoutReq({username:this.info.username});
       this.setPermissions([]);
       this.setUserInfo('');
       storage.remove(ACCESS_TOKEN);

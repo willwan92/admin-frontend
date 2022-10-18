@@ -1,7 +1,7 @@
 <template>
   <div class="view-account">
     <div class="view-account-header"></div>
-    <div class="view-account-container">
+    <div class="view-account-container" @keyup.enter="handleSubmit">
       <div class="view-account-top">
         <div class="view-account-top-logo">
           <img :src="websiteConfig.logo" alt="" />
@@ -110,12 +110,14 @@ const refreshCaptach = () => {
 };
 const handleSubmit = (e) => {
   e.preventDefault();
+  loginHandle();
+};
+const loginHandle = () => {
   formRef.value.validate(async (errors) => {
     if (!errors) {
       const { username, password, captcha } = formInline;
       message.loading('登录中...');
       loading.value = true;
-
       const params: FormState = {
         username,
         password,
@@ -143,7 +145,7 @@ const handleSubmit = (e) => {
       message.error('请填写完整信息，并且进行验证码校验');
     }
   });
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -183,7 +185,7 @@ const handleSubmit = (e) => {
     }
   }
   .captcha-img {
-    width: 118px;
+    width: 110px;
     margin-left: 10px;
   }
 }
