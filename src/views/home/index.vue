@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, onBeforeMount } from 'vue';
+  import { ref, reactive, onBeforeMount, onBeforeUnmount } from 'vue';
   import { Ethernet } from '@vicons/fa';
   import * as Api from '@/api/home';
 
@@ -195,11 +195,21 @@
     }
   };
 
-  onBeforeMount(() => {
+  const refresh = () => {
     loadSystemMonitorInfo();
     loadInterfaceInfo();
+  };
+
+  let timer;
+  onBeforeMount(() => {
+    refresh();
+    timer = setInterval(refresh, 10000);
     loadProdInfo();
     loadAagTestInfo();
+  });
+
+  onBeforeUnmount(() => {
+    clearInterval(timer);
   });
 </script>
 
