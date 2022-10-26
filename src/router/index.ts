@@ -37,12 +37,20 @@ export const LoginRoute: RouteRecordRaw = {
     title: '登录',
   },
 };
+export const InitRoute: RouteRecordRaw = {
+  path: '/init',
+  name: 'Init',
+  component: () => import('@/views/init/index.vue'),
+  meta: {
+    title: '初始化系统',
+  },
+};
 
 //需要验证权限
 export const asyncRoutes = [...routeModuleList];
 
 //普通路由 无需验证权限
-export const constantRouter: any[] = [LoginRoute, RootRoute, RedirectRoute];
+export const constantRouter: any[] = [LoginRoute, RootRoute, RedirectRoute,InitRoute];
 
 const router = createRouter({
   history: createWebHashHistory(''),

@@ -1,6 +1,6 @@
 <template>
   <n-card :bordered="false" class="proCard">
-    <n-form ref="searchRef" :model="params" inline label-placement="left" label-width="80"
+    <n-form v-if="showSearch" ref="searchRef" :model="params" inline label-placement="left" label-width="80"
       require-mark-placement="right-hanging">
       <n-form-item style="width:210px" label="用户名称" path="username">
         <n-input v-model:value="params.username" placeholder="请输入用户名称" />
@@ -41,7 +41,7 @@
       </template>
     </n-button>
     <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="usersRef"
-      :actionColumn="actionColumn"></BasicTable>
+      :actionColumn="actionColumn" :pagination="showPager"></BasicTable>
 
     <n-modal v-model:show="editControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
       style="width:600px">
@@ -123,22 +123,22 @@
         </n-space>
       </template>
     </n-modal>
-    <n-modal v-model:show="disRole.show" preset="dialog" title="Dialog" :mask-closable="false" style="width:300px">
+    <n-modal v-model:show="mpm.show" preset="dialog" title="Dialog" :mask-closable="false" style="width:300px">
       <template #header>
-        <div>分配角色</div>
+        <div>修改密码</div>
       </template>
       <div>
-        <n-form ref="formRef" label-placement="left" label-width="auto" :model="disRole" size="medium"
+        <n-form ref="psdFormRef" label-placement="left" label-width="auto" :model="disRole" size="medium"
           style="width:100%">
-          <n-form-item label="用户角色" path="role">
-            <n-select v-model:value="disRole.role" placeholder="选择角色" :options="editControl.roleOptions" />
+          <n-form-item label="新密码" path="password">
+            <n-input v-model:value="mpm.password" type="password" placeholder="输入新密码" />
           </n-form-item>
         </n-form>
       </div>
       <template #action>
         <n-space>
-          <n-button type="info" @click="saveRole">确定</n-button>
-          <n-button @click="closeRole">取消</n-button>
+          <n-button type="info" @click="savePassword">确定</n-button>
+          <n-button @click="closemPM">取消</n-button>
         </n-space>
       </template>
     </n-modal>
@@ -150,12 +150,11 @@ import { reactive, ref, h, watch } from 'vue';
 import { BasicTable } from '@/components/Table';
 import {
   getUserList, addUserRequest, deleteUserRequest,
-  editUserRequest, setUserStatusRequest, setUserRoleRequest
+  editUserRequest, setUserStatusRequest, setUserRoleRequest,getUserRequest,modifyPasswordRequest
 } from '@/api/system/user';
-import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined, SearchOutlined, ReloadOutlined } from '@vicons/antd'
+import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined, 
+  SearchOutlined, ReloadOutlined } from '@vicons/antd'
 import { NButton, FormInst, useMessage, useDialog, NSwitch } from 'naive-ui'
-import * as dayjs from 'dayjs'
-
 
 const columns = [
   {
@@ -171,7 +170,8 @@ const columns = [
   {
     title: '手机号',
     key: 'phone',
-    align: 'center'
+    align: 'center',
+    width:"110"
   },
   {
     title: 'key编码',
@@ -182,6 +182,7 @@ const columns = [
     title: '状态',
     key: 'status',
     align: 'center',
+    width:"70",
     render(row) {
       return h(
         NSwitch,
@@ -202,7 +203,12 @@ const columns = [
     title: '创建时间',
     key: 'created_at',
     align: 'center',
-    render: (row) => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
+    render(row){
+      let a = new Date(row.created_at);
+      let timeStr = `${a.getFullYear()}-${tTN(a.getMonth()+1)}-${tTN(a.getDate())} 
+            ${tTN(a.getHours())}:${tTN(a.getMinutes())}:${tTN(a.getSeconds())}`
+      return timeStr;
+    }
   }
 ];
 
@@ -217,6 +223,19 @@ const disRole = reactive({
   role: "",
   id: null
 })
+const mpm = reactive({
+  show: false,
+  id: null,
+  password:""
+})
+const props = defineProps(['showSearch','showPager'])
+function tTN(num){
+  if(num<10){
+    return '0'+num;
+  }else{
+    return num;
+  }
+}
 const editControl = reactive({
   editShow: false,
   title: "修改用户",
@@ -239,7 +258,7 @@ const editInfo = reactive({
   "key": "",
   "gender": "",
   "email": "",
-  "status": "",
+  "status": "enable",
   "remarks": "",
   "password": ""
 })
@@ -262,7 +281,7 @@ const params = reactive({
 });
 
 const actionColumn = reactive({
-  width: 400,
+  width: 405,
   title: '操作',
   key: 'action',
   fixed: 'right',
@@ -274,6 +293,7 @@ const actionColumn = reactive({
         {
           type: "info",
           size: 'tiny',
+          ghost:true,
           style: "margin-right:5px",
           onClick: () => editUser(row)
         },
@@ -284,6 +304,18 @@ const actionColumn = reactive({
         {
           type: "info",
           size: 'tiny',
+          ghost:true,
+          style: "margin-right:5px",
+          onClick: () => modifyPassword(row)
+        },
+        { default: () => '修改密码',icon:()=>h(EditOutlined) }
+      ),
+      h(
+        NButton,
+        {
+          type: "info",
+          size: 'tiny',
+          ghost:true,
           style: "margin-right:5px",
           onClick: () => deleteUser(row)
         },
@@ -294,6 +326,7 @@ const actionColumn = reactive({
         {
           type: "info",
           size: 'tiny',
+          ghost:true,
           style: "margin-right:5px",
           onClick: () => distributionRole(row)
         },
@@ -304,6 +337,7 @@ const actionColumn = reactive({
         {
           type: "info",
           size: 'tiny',
+          ghost:true,
           onClick: () => unbindingUkey(row)
         },
         { default: () => '解绑UKEY',icon:()=>h(CheckCircleOutlined) }
@@ -311,6 +345,28 @@ const actionColumn = reactive({
     ]
   },
 });
+function modifyPassword(row){
+  mpm.show = true;
+  mpm.id = row.id;
+}
+function closemPM(){
+  mpm.show = false;
+  mpm.id = null;
+}
+const savePassword = async () => {
+  if(mpm.password){
+    let res = await modifyPasswordRequest(mpm.id,{password:mpm.password});
+    if(res.code === 0){
+      closemPM();
+      layerMsg.success("修改密码成功");
+    }else{
+      layerMsg.success(res.message || "修改密码失败");
+    }
+  }else{
+    layerMsg.error("请先输入新密码");
+  }
+  
+}
 function paramsDateChange(v: number) {
   params.startDate = v[0];
   params.startDate = v[1];
@@ -353,19 +409,21 @@ function clearEdit() {
   editInfo.key = "";
   editInfo.gender = "";
   editInfo.email = "";
-  editInfo.status = "";
+  editInfo.status = "enable";
   editInfo.remarks = "";
   editInfo.password = "";
   editControl.editId = null;
 }
-function editUser(row) {
-  editInfo.nickname = row.nickname;
-  editInfo.role = row.role;
-  editInfo.phone = row.phone;
-  editInfo.gender = row.gender;
-  editInfo.email = row.email;
-  editInfo.status = row.status;
-  editInfo.remarks = row.remarks;
+const editUser = async(row) => {
+  let gInfo = await getUserRequest(row.id);
+  let cInfo = gInfo;
+  editInfo.nickname = cInfo.nickname;
+  editInfo.role = cInfo.role;
+  editInfo.phone = cInfo.phone;
+  editInfo.gender = cInfo.gender;
+  editInfo.email = cInfo.email;
+  editInfo.status = cInfo.status;
+  editInfo.remarks = cInfo.remarks;
 
   editControl.isAdd = false;
   editControl.title = "修改信息";

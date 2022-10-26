@@ -4,7 +4,7 @@ import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-type
 import { ResultEnum } from '@/enums/httpEnum';
 
 import { login,logoutReq } from '@/api/auth';
-import { getUserInfo, getUserList } from '@/api/system/user';
+import { getUserRequest, getUserList } from '@/api/system/user';
 import { storage } from '@/utils/Storage';
 
 export interface IUserState {
@@ -49,7 +49,7 @@ export const useUserStore = defineStore({
     //获取用户列表
     async getUserList() {
       try {
-        const response = await getUserList();
+        const response = await getUserList({});
         return Promise.resolve(response);
       } catch (e) {
         return Promise.reject(e);
@@ -77,7 +77,7 @@ export const useUserStore = defineStore({
     // 获取用户信息
     GetInfo() {
       return new Promise((resolve, reject) => {
-        getUserInfo(this.info.userId)
+        getUserRequest(this.info.userId)
           .then((res) => {
             const result = res;
             if (result.role) {

@@ -21,15 +21,12 @@ export function createRouterGuards(router: Router) {
       next(PageEnum.BASE_HOME);
       return;
     }
-
     // Whitelist can be directly entered
     if (whitePathList.includes(to.path as PageEnum)) {
       next();
       return;
     }
-
     const token = storage.get(ACCESS_TOKEN);
-
     if (!token) {
       // You can access without permissions. You need to set the routing meta.ignoreAuth to true
       if (to.meta.ignoreAuth) {
@@ -50,13 +47,17 @@ export function createRouterGuards(router: Router) {
       next(redirectData);
       return;
     }
-
     if (asyncRouteStore.getIsDynamicAddedRoute) {
       next();
       return;
     }
 
     const userInfo = await userStore.GetInfo();
+    if(userInfo.role === 'default'){
+      next({
+        path:"init"
+      })
+    }
 
     const routes = await asyncRouteStore.generateRoutes(userInfo);
 

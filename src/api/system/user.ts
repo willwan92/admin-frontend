@@ -15,7 +15,7 @@ export interface BasicPageParams {
 /**
  * @description: 获取用户信息
  */
-export function getUserInfo(id) {
+export function getUserRequest(id) {
   return http.request({
     url: `/users/${id}`,
     method: 'get',
@@ -114,6 +114,22 @@ export function getUserList(params) {
   return http.request<BasicResponseModel>(
     {
       url: `/users/${id}/role`,
+      method: 'PATCH',
+      data:params
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+/**
+ *
+ * @description：修改用户密码
+ */
+ export function modifyPasswordRequest(id,params) {
+  return http.request<BasicResponseModel>(
+    {
+      url: `/users/${id}/password`,
       method: 'PATCH',
       data:params
     },

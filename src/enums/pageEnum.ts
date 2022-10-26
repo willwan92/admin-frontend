@@ -11,4 +11,6 @@ export enum PageEnum {
   BASE_HOME_REDIRECT = '/home/index',
   // 错误
   ERROR_PAGE_NAME = 'ErrorPage',
+  //初始化系统
+  BASE_INIT = '/init'
 }
