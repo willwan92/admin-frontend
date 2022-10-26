@@ -51,12 +51,12 @@
       >
         <n-list>
           <n-list-item v-for="item in interfaces" :key="item.if_name">
-            {{ item.if_name }}
+            <span class="if-name">{{ item.if_name }}</span>
             <n-icon
               class="icon"
               size="16"
-              :color="item.link_status ? '#18a058' : '#767c82'"
-              :title="item.link_status ? '已连接' : '未连接'"
+              :color="Number(item.link_status) ? '#18a058' : '#767c82'"
+              :title="Number(item.link_status) ? '已连接' : '未连接'"
             >
               <Ethernet />
             </n-icon>
@@ -111,123 +111,128 @@
       </n-grid-item> -->
   </n-grid>
 </template>
-  
+
 <script lang="ts" setup>
-import { ref, reactive, onBeforeMount } from 'vue';
-import { Ethernet } from '@vicons/fa';
-import * as Api from '@/api/home';
+  import { ref, reactive, onBeforeMount } from 'vue';
+  import { Ethernet } from '@vicons/fa';
+  import * as Api from '@/api/home';
 
-const systemMonitorInfo = reactive({
-  cpu: 0,
-  mem: 0,
-  hardisk: 0,
-  file: 0,
-});
+  const systemMonitorInfo = reactive({
+    cpu: 0,
+    mem: 0,
+    hardisk: 0,
+    file: 0,
+  });
 
-const loadSystemMonitorInfo = async () => {
-  const data = await Api.getSystemMonitorInfo();
-  const { cpu, mem, hardisk, file } = data;
-  systemMonitorInfo.cpu = Number(cpu.replace('%', ''));
-  systemMonitorInfo.mem = Number(mem.replace('%', ''));
-  systemMonitorInfo.hardisk = Number(hardisk.replace('%', ''));
-  systemMonitorInfo.file = Number(file.replace('%', ''));
-};
+  const loadSystemMonitorInfo = async () => {
+    const data = await Api.getSystemMonitorInfo();
+    const { cpu, mem, hardisk, file } = data;
+    systemMonitorInfo.cpu = Number(cpu.replace('%', ''));
+    systemMonitorInfo.mem = Number(mem.replace('%', ''));
+    systemMonitorInfo.hardisk = Number(hardisk.replace('%', ''));
+    systemMonitorInfo.file = Number(file.replace('%', ''));
+  };
 
-interface interfaceType {
-  if_name: string;
-  link_status: string;
-  in_flow: string;
-  out_flow: string;
-}
-const interfaces = ref<interfaceType[]>();
-const loadInterfaceInfo = async () => {
-  const data = await Api.getInterfaceInfo();
-  interfaces.value = data;
-};
-
-const prodInfo = reactive({
-  company_name: '',
-  product_name: '',
-  product_type: '',
-  product_version: '',
-  product_sn: '',
-  system_time: '',
-});
-
-const prodInfoMap = {
-  company_name: '公司名称',
-  product_name: '产品名称',
-  product_type: '产品型号',
-  product_version: '产品版本',
-  product_sn: '产品序列号',
-  system_time: '系统运行时间',
-};
-
-const loadProdInfo = async () => {
-  const data = await Api.getProductInfo();
-  for (const key in prodInfoMap) {
-    prodInfo[key] = data[key];
+  interface interfaceType {
+    if_name: string;
+    link_status: string;
+    in_flow: string;
+    out_flow: string;
   }
-};
+  const interfaces = ref<interfaceType[]>();
+  const loadInterfaceInfo = async () => {
+    const data = await Api.getInterfaceInfo();
+    interfaces.value = data;
+  };
 
-const algTestInfo = reactive({
-  card: '',
-  SM1: '',
-  SM2: '',
-  SM3: '',
-  SM4: '',
-  random: '',
-});
+  const prodInfo = reactive({
+    company_name: '',
+    product_name: '',
+    product_type: '',
+    product_version: '',
+    product_sn: '',
+    system_time: '',
+  });
 
-const algTestMap = {
-  card: '加密卡状态',
-  random: '随机数质量',
-  SM1: 'SM1算法正确性',
-  SM2: 'SM2算法正确性',
-  SM3: 'SM3算法正确性',
-  SM4: 'SM4算法正确性',
-};
+  const prodInfoMap = {
+    company_name: '公司名称',
+    product_name: '产品名称',
+    product_type: '产品型号',
+    product_version: '产品版本',
+    product_sn: '产品序列号',
+    system_time: '系统运行时间',
+  };
 
-const loadAagTestInfo = async () => {
-  const data = await Api.getAlgTestInfo();
-  for (const key in algTestMap) {
-    algTestInfo[key] = data[key];
-  }
-};
+  const loadProdInfo = async () => {
+    const data = await Api.getProductInfo();
+    for (const key in prodInfoMap) {
+      prodInfo[key] = data[key];
+    }
+  };
 
-onBeforeMount(() => {
-  loadSystemMonitorInfo();
-  loadInterfaceInfo();
-  loadProdInfo();
-  loadAagTestInfo();
-});
+  const algTestInfo = reactive({
+    card: '',
+    SM1: '',
+    SM2: '',
+    SM3: '',
+    SM4: '',
+    random: '',
+  });
+
+  const algTestMap = {
+    card: '加密卡状态',
+    random: '随机数质量',
+    SM1: 'SM1算法正确性',
+    SM2: 'SM2算法正确性',
+    SM3: 'SM3算法正确性',
+    SM4: 'SM4算法正确性',
+  };
+
+  const loadAagTestInfo = async () => {
+    const data = await Api.getAlgTestInfo();
+    for (const key in algTestMap) {
+      algTestInfo[key] = data[key];
+    }
+  };
+
+  onBeforeMount(() => {
+    loadSystemMonitorInfo();
+    loadInterfaceInfo();
+    loadProdInfo();
+    loadAagTestInfo();
+  });
 </script>
-  
-  <style lang="less" scoped>
-.system-monitor {
-  .label {
-    margin-bottom: 2px;
+
+<style lang="less" scoped>
+  .system-monitor {
+    .label {
+      margin-bottom: 2px;
+    }
+
+    .n-progress {
+      margin-bottom: 10px;
+    }
   }
 
-  .n-progress {
-    margin-bottom: 10px;
-  }
-}
+  .interface {
+    .n-list {
+      height: 202px;
+      overflow: auto;
+    }
 
-.interface {
-  .n-list {
-    height: 202px;
-    overflow: auto;
-  }
+    .if-name {
+      display: inline-block;
+      width: 36px;
+    }
 
-  .icon {
-    margin-left: 10px;
-    margin-right: 20px;
-    margin-bottom: 2px;
-  }
+    .icon {
+      margin-left: 10px;
+      margin-right: 20px;
+      margin-bottom: 2px;
+    }
 
-  .in {
-    margin-right: 20px;
+    .in {
+      margin-right: 20px;
+    }
   }
-}
 </style>
