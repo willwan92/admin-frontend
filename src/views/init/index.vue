@@ -31,7 +31,7 @@ import initcard from '@/views/init/initCard/index.vue'
 import initCa from '@/views/init/initCa/index.vue'
 import initThreeUser from '@/views/init/initThreeUser/index.vue'
 import { initSecretKeyRequest } from "@/api/init"
-const currentStepNum = ref(0);
+const currentStepNum = ref(1);
 const dialog = useDialog();
 const message = useMessage();
 const userStore = useUserStore();
@@ -39,7 +39,7 @@ const router = useRouter();
 const route = useRoute();
 const bigStepArr = ref([
   {title:"管理卡初始化"},
-  {title:"设备密钥初始化"},
+  // {title:"设备密钥初始化"},
   {title:"证书初始化"},
   {title:"三元初始化"}
 ])
@@ -71,9 +71,9 @@ const doLogout = () => {
         router
           .replace({
             name: 'Login',
-            query: {
-              redirect: route.fullPath,
-            },
+            // query: {
+            //   redirect: route.fullPath,
+            // },
           })
           .finally(() => location.reload());
       });
