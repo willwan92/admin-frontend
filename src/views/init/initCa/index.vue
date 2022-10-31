@@ -1,5 +1,5 @@
 <template>
-    <n-form ref="formRef" :model="infoModel" :rules="rules" label-placement="left" label-width="auto"
+    <n-form ref="formRef" :model="model" :rules="rules" label-placement="left" label-width="auto"
         require-mark-placement="right-hanging" size="small" :style="{
           maxWidth: '640px',margin:'30px auto'
         }">

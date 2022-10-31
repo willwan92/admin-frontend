@@ -49,72 +49,7 @@
         <div>{{editControl.title}}</div>
       </template>
       <div>
-        <n-form ref="formRef" label-placement="left" label-width="auto" :model="editInfo" :rules="rules" size="medium"
-          style="width:100%">
-          <n-grid style="width:100%" x-gap="12" :cols="2" v-if="editControl.isAdd">
-            <n-gi>
-              <n-form-item label="用户名" path="username">
-                <n-input v-model:value="editInfo.username" placeholder="输入用户名" />
-              </n-form-item>
-            </n-gi>
-            <n-gi>
-              <n-form-item label="密码" path="password">
-                <n-input v-model:value="editInfo.password" type="password" placeholder="输入密码" />
-              </n-form-item>
-            </n-gi>
-          </n-grid>
-          <n-grid style="width:100%" x-gap="12" :cols="2">
-            <n-gi>
-              <n-form-item label="用户昵称" path="nickname">
-                <n-input v-model:value="editInfo.nickname" placeholder="输入用户名" />
-              </n-form-item>
-            </n-gi>
-            <n-gi>
-              <n-form-item label="用户角色" path="role">
-                <n-select v-model:value="editInfo.role" placeholder="选择角色" :options="editControl.roleOptions" />
-              </n-form-item>
-            </n-gi>
-          </n-grid>
-          <n-grid style="width:100%" x-gap="12" :cols="2">
-            <n-gi>
-              <n-form-item label="手机号码" path="phone">
-                <n-input v-model:value="editInfo.phone" placeholder="输入手机号码" />
-              </n-form-item>
-            </n-gi>
-            <n-gi>
-              <n-form-item label="用户性别" path="gender">
-                <n-select v-model:value="editInfo.gender" placeholder="选择性别" :options="editControl.genderOptions" />
-              </n-form-item>
-            </n-gi>
-          </n-grid>
-          <n-grid style="width:100%" x-gap="12" :cols="2">
-            <n-gi>
-              <n-form-item label="邮箱" path="email">
-                <n-input v-model:value="editInfo.email" placeholder="输入邮箱" />
-              </n-form-item>
-            </n-gi>
-            <n-gi>
-              <n-form-item label="状态" path="status">
-                <n-radio-group v-model:value="editInfo.status">
-                  <n-space>
-                    <n-radio value="enable">启用</n-radio>
-                    <n-radio value="disable">禁用</n-radio>
-                  </n-space>
-                </n-radio-group>
-              </n-form-item>
-            </n-gi>
-          </n-grid>
-          <n-grid style="width:100%" x-gap="12" :cols="1">
-            <n-gi>
-              <n-form-item label="备注" path="remarks">
-                <n-input v-model:value="editInfo.remarks" placeholder="请输入备注" type="textarea" :autosize="{
-                  minRows: 3,
-                  maxRows: 5
-                }" />
-              </n-form-item>
-            </n-gi>
-          </n-grid>
-        </n-form>
+        <userInfo ref="editRef" :editInfo="editInfo" :editId="editControl.editId" :isAdd="editControl.isAdd"/>
       </div>
       <template #action>
         <n-space>
@@ -154,7 +89,8 @@ import {
 } from '@/api/system/user';
 import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined, 
   SearchOutlined, ReloadOutlined } from '@vicons/antd'
-import { NButton, FormInst, useMessage, useDialog, NSwitch } from 'naive-ui'
+import userInfo from './userInfo.vue'
+import { NButton, useMessage, useDialog, NSwitch } from 'naive-ui'
 
 const columns = [
   {
@@ -214,8 +150,8 @@ const columns = [
 
 
 const usersRef = ref();
+const editRef = ref();
 const dateRange = ref(null)
-const formRef = ref<FormInst | null>(null);
 const layerMsg = useMessage();
 const layerDialog = useDialog();
 const disRole = reactive({
@@ -261,16 +197,6 @@ const editInfo = reactive({
   "status": "enable",
   "remarks": "",
   "password": ""
-})
-const rules = reactive({
-  username: { required: true, trigger: ['blur', 'input'], message: '请输入用户名' },
-  nickname: { required: true, trigger: ['blur', 'input'], message: '请输入用户昵称' },
-  role: {
-    required: true,
-    trigger: ['blur', 'change'], message: '请选择角色'
-  },
-  status: { required: true, trigger: ['blur', 'input'], message: '请选择用户状态' },
-  password: { required: true, trigger: ['blur', 'input'], message: '请输入密码' },
 })
 const params = reactive({
   username: '',
@@ -375,16 +301,12 @@ function disablePreviousDate(ts: number) {
   return ts > Date.now()
 }
 function saveEdit() {
-  formRef.value?.validate((errors) => {
-    if (errors) {
-      layerMsg.error("信息填写不完成")
-    } else {
-      if (editControl.isAdd) {
+  editRef.value.checkForm(function(){
+    if (editControl.isAdd) {
         addRequest();
       } else {
         editRequest();
       }
-    }
   })
 };
 function resetParams() {
