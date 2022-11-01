@@ -13,16 +13,6 @@ export interface BasicPageParams {
 }
 
 /**
- * @description: 获取用户信息
- */
-export function getUserRequest(id) {
-  return http.request({
-    url: `/users/${id}`,
-    method: 'get',
-  });
-}
-
-/**
  *
  * @description：获取服务列表
  */
@@ -61,22 +51,6 @@ export function getServerList(params) {
 }
 /**
  *
- * @description：编辑用户
- */
- export function editUserRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}`,
-      method: 'PUT',
-      data:params
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
  * @description：删除服务
  */
  export function deleteServerRequest(id) {
@@ -84,54 +58,6 @@ export function getServerList(params) {
     {
       url: `/servers/${id}`,
       method: 'DELETE'
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改用户状态
- */
- export function setUserStatusRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}/status`,
-      method: 'PATCH',
-      data:params
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改用户角色
- */
- export function setUserRoleRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}/role`,
-      method: 'PATCH',
-      data:params
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改用户密码
- */
- export function modifyPasswordRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}/password`,
-      method: 'PATCH',
-      data:params
     },
     {
       isTransformResponse: false,
