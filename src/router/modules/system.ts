@@ -34,6 +34,15 @@ const routes: Array<RouteRecordRaw> = [
           activeMenu: 'system_user',
         },
         component: () => import('@/views/user/index.vue'),
+      },
+      {
+        path: 'server',
+        name: `system_server`,
+        meta: {
+          title: '服务管理',
+          activeMenu: 'system_server',
+        },
+        component: () => import('@/views/server/index.vue'),
       }
     ],
   }
