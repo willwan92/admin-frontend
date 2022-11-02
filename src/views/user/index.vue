@@ -164,7 +164,10 @@ const mpm = reactive({
   id: null,
   password:""
 })
-const props = defineProps(['showSearch','showPager'])
+const props = defineProps({
+  showSearch:{type:Boolean,default:true},
+  showPager:{type:Boolean,default:true}
+});
 function tTN(num){
   if(num<10){
     return '0'+num;

@@ -43,6 +43,15 @@ const routes: Array<RouteRecordRaw> = [
           activeMenu: 'system_server',
         },
         component: () => import('@/views/server/index.vue'),
+      },
+      {
+        path: 'secrekey',
+        name: `system_secrekey`,
+        meta: {
+          title: '密钥管理',
+          activeMenu: 'system_secrekey',
+        },
+        component: () => import('@/views/secrekey/index.vue'),
       }
     ],
   }

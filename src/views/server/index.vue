@@ -142,20 +142,9 @@
       ]
     },
   });
-  function paramsDateChange(v: number) {
-    params.startDate = v[0];
-    params.startDate = v[1];
-  }
-  function disablePreviousDate(ts: number) {
-    return ts > Date.now()
-  }
   function saveEdit() {
     serverEditRef.value.checkForm(function(){
-      if (serverControl.isAdd) {
-          addRequest();
-        } else {
-          editRequest();
-        }
+      addRequest();
     })
   };
   function resetParams() {
