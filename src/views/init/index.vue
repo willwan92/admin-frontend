@@ -8,7 +8,7 @@
   </div>
   <div class="init-con flexBox">
     <div class="init-big-step">
-      <div v-for="(nav,index) in bigStepArr" :class="['init-step-title',currentStepNum==index?'active':'']">{{nav.title}}</div>
+      <div v-for="(nav,index) in bigStepArr" @click="bigStepGo(index)" :class="['init-step-title',currentStepNum==index?'active':'']">{{nav.title}}</div>
     </div>
     <div class="init-small-steps">
       <initcard v-if="currentStepNum == 0" @go="nextBigStep"  />
@@ -31,7 +31,7 @@ import initcard from '@/views/init/initCard/index.vue'
 import initCa from '@/views/init/initCa/index.vue'
 import initThreeUser from '@/views/init/initThreeUser/index.vue'
 import { initSecretKeyRequest } from "@/api/init"
-const currentStepNum = ref(1);
+const currentStepNum = ref(0);
 const dialog = useDialog();
 const message = useMessage();
 const userStore = useUserStore();
@@ -55,6 +55,9 @@ const nextBigStep = () => {
   if(currentStepNum.value >= 0 && currentStepNum.value<=3){
     currentStepNum.value ++
   }
+}
+const bigStepGo = (index) => {
+  currentStepNum.value = index;
 }
 // 退出登录
 const doLogout = () => {
