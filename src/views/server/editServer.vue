@@ -22,7 +22,7 @@ const serverControl = reactive({
     typeOptions: [{ label: "SDF(国标)接口", value: '1' }, { label: "pcks11接口", value: '2' }, { label: "CSP接口", value: '3' }]
 })
 const rules = reactive({
-    ip: { required: true, trigger: ['blur', 'input'], message: '请输入服务为地址' },
+    ip: { required: true, trigger: ['blur', 'input'], message: '请输入服务地址' },
     port: { required: true, trigger: ['blur', 'input'], message: '请输入服务端口' },
     type: {
         required: true,

@@ -52,6 +52,24 @@ const routes: Array<RouteRecordRaw> = [
           activeMenu: 'system_secrekey',
         },
         component: () => import('@/views/secrekey/index.vue'),
+      },
+      {
+        path: 'adminip',
+        name: `system_adminip`,
+        meta: {
+          title: '管理主机',
+          activeMenu: 'system_adminip',
+        },
+        component: () => import('@/views/adminip/index.vue'),
+      },
+      {
+        path: 'whitelist',
+        name: `system_whitelist`,
+        meta: {
+          title: '白名单管理',
+          activeMenu: 'system_whitelist',
+        },
+        component: () => import('@/views/whitelist/index.vue'),
       }
     ],
   }
