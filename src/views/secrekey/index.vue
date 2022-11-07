@@ -2,11 +2,12 @@
   <n-card :bordered="false" class="proCard">
     <n-form ref="searchRef" :model="params" inline label-placement="left" label-width="80"
       require-mark-placement="right-hanging">
-      <n-form-item style="width:260px" label="生产时间" path="createTime">
-        <n-date-picker v-model:value="params.createTime" type="datetime" clearable />
+      <n-form-item style="width:260px" label="密钥索引" path="keyindex">
+        <n-input v-model:value="params.keyindex" placeholder="请输入密钥索引" />
       </n-form-item>
-      <n-form-item style="width:220px" label="密钥索引" path="secreIndex">
-        <n-input v-model:value="params.secreIndex" placeholder="请输入密钥索引" />
+      <n-form-item label="密钥类型" path="keytype" label-width="80">
+        <n-select style="width:120px" v-model:value="params.keytype"
+          :options="secrekeyControl.typeOptions" />
       </n-form-item>
       <n-space>
         <n-button type="info" @click="reloadTable">
@@ -25,7 +26,7 @@
         </n-button>
       </n-space>
     </n-form>
-    <n-button type="info" ghost @click="addServer">生产密钥
+    <n-button type="info" ghost @click="addSecrekey">生产密钥
       <template #icon>
         <n-icon>
           <PlusOutlined />
@@ -35,13 +36,13 @@
     <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="serviceRef"
       :actionColumn="actionColumn"></BasicTable>
 
-    <n-modal v-model:show="serverControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
+    <n-modal v-model:show="secrekeyControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
       style="width:600px">
       <template #header>
-        <div>{{serverControl.title}}</div>
+        <div>{{secrekeyControl.title}}</div>
       </template>
       <div>
-        <!-- <editServer ref="serverEditRef" :serverInfo="serverInfo" :serverId="serverControl.serverId" :isAdd="serverControl.isAdd" /> -->
+        <editSecrekey ref="secrekeyEditRef" :secrekeyInfo="secrekeyInfo" :secrekeyId="secrekeyControl.secrekeyId" :isAdd="secrekeyControl.isAdd" />
       </div>
       <template #action>
         <n-space>
@@ -57,54 +58,49 @@
 import { reactive, ref, h, watch } from 'vue';
 import { BasicTable } from '@/components/Table';
 import {
-  getServerList, addServerRequest, deleteServerRequest
-} from '@/api/system/server';
-// import editServer from './editServer.vue'
+  getSecrekeyList, addSecrekeyRequest, deleteSecrekeyRequest
+} from '@/api/system/secrekey';
+import editSecrekey from './editSecrekey.vue'
 import { PlusOutlined,SearchOutlined,ReloadOutlined, EditOutlined, DeleteOutlined } from '@vicons/antd'
 import { NButton, useMessage, useDialog } from 'naive-ui'
 
 const columns = [
   {
     title: '密钥索引',
-    key: 'secreIndex',
+    key: 'keyindex',
     align: 'center'
   },
   {
-    title: '生产时间',
-    key: 'createTime',
-    align: 'center'
-  },
-  {
-    title: '备注',
-    key: 'remark',
+    title: '密钥类型',
+    key: 'keytype',
     align: 'center'
   }
 ];
 
 
 const serviceRef = ref();
-const serverEditRef = ref();
+const secrekeyEditRef = ref();
 const layerMsg = useMessage();
 const layerDialog = useDialog();
-const serverControl = reactive({
+const secrekeyControl = reactive({
   editShow: false,
-  title: "修改用户",
-  typeOptions: [{ label: "请选择服务类型", value:""}, { label: "SDF(国标)接口", value:"1"}, { label: "pcks11接口", value: "2" }, { label: "CSP接口", value: "3" }],
+  title: "修改密钥",
+  typeOptions: [{ label: "请选择密钥类型", value:""}, { label: "sm1", value:"sm1"}, { label: "sm2", value: "sm2" }, { label: "sm4", value: "sm4" }],
   isAdd: true,
-  serverId: null,
+  secrekeyId: null,
   searchPager: {
-    page: 1,
+    pageNo: 1,
     pageSize: 10
   }
 })
-const serverInfo = reactive({
-  "ip": "",
-  "port": "",
-  "type":null
+const secrekeyInfo = reactive({
+  "keytype": "",
+  "keyindex": "",
+  "keylen":""
 })
 const params = reactive({
-  createTime: new Date(),
-  secreIndex: ''
+  keyindex:"",
+  keytype: 'sm1'
 });
 
 const actionColumn = reactive({
@@ -122,7 +118,7 @@ const actionColumn = reactive({
           size: 'tiny',
           ghost:true,
           style: "margin-right:5px",
-          onClick: () => deleteUser(row)
+          onClick: () => deleteSecrekey(row)
         },
         { default: () => '删除',icon:()=>h(DeleteOutlined) }
       )
@@ -130,7 +126,7 @@ const actionColumn = reactive({
   },
 });
 function saveEdit() {
-    serverEditRef.value.checkForm(function(){
+    secrekeyEditRef.value.checkForm(function(){
       addRequest();
     })
   };
@@ -140,28 +136,28 @@ function resetParams() {
   reloadTable();
 }
 function closeEdit() {
-  serverControl.editShow = false;
+  secrekeyControl.editShow = false;
   clearEdit();
 };
 function clearEdit() {
-  serverInfo.ip = "";
-  serverInfo.port = "";
-  serverInfo.type = null;
-  serverControl.serverId = null;
+  secrekeyInfo.keytype = "";
+  secrekeyInfo.keyindex = "";
+  secrekeyInfo.keylen = "null";
+  secrekeyControl.secrekeyId = null;
 }
-function deleteUser(row) {
+function deleteSecrekey(row) {
   layerDialog.warning({
     title: "提示",
-    content: `确定要删除 ${row.ip} 服务吗？`,
+    content: `确定要删除索引为 ${row.keyindex} 的密钥吗？`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      deleteRequest(row.id)
+      deleteRequest(row.keyindex)
     }
   })
 }
 const deleteRequest = async (id) => {
-  let deleteRespons = await deleteServerRequest(id);
+  let deleteRespons = await deleteSecrekeyRequest(id);
   if (deleteRespons.code != 0) {
     layerMsg.error(deleteRespons.message || "新增失败");
   } else {
@@ -170,15 +166,15 @@ const deleteRequest = async (id) => {
   }
 }
 const addRequest = async () => {
-  let postObj = JSON.parse(JSON.stringify(serverInfo));
+  let postObj = JSON.parse(JSON.stringify(secrekeyInfo));
   for (let k in postObj) {
     if (!postObj[k]) {
       delete postObj[k]
     }
   }
-  postObj['port'] = parseInt(postObj['port']);
-  postObj['type'] = parseInt(postObj['type']);
-  let saveRespons = await addServerRequest(postObj);
+  postObj['keyindex'] = parseInt(postObj['keyindex']);
+  postObj['keylen'] = parseInt(postObj['keylen']);
+  let saveRespons = await addSecrekeyRequest(postObj);
   if (saveRespons.code != 0) {
     layerMsg.error(saveRespons.message || "新增失败");
   } else {
@@ -189,7 +185,11 @@ const addRequest = async () => {
 }
 
 const loadDataTable = async (res) => {
-  let userList = await getServerList({ ...params, ...res });
+  let postPager = {
+    pageNo:res.page,
+    pageSize:res.pageSize
+  }
+  let userList = await getSecrekeyList({ ...params, ...postPager });
   return new Promise((resolve) => {
     let rData = {
       list: userList.result.data,
@@ -204,12 +204,12 @@ function reloadTable() {
   serviceRef.value.reload();
 }
 
-function addServer() {
-  serverControl.isAdd = true;
-  serverControl.title = "生产密钥";
-  serverControl.editShow = true;
+function addSecrekey() {
+  secrekeyControl.isAdd = true;
+  secrekeyControl.title = "生产密钥";
+  secrekeyControl.editShow = true;
 };
-watch(serverControl, (nv) => {
+watch(secrekeyControl, (nv) => {
   if (!nv.editShow) {
     clearEdit();
   }
