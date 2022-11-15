@@ -90,7 +90,8 @@ export default defineComponent({
             },
             generateCa(){
                 checkInput(async () => {
-                    let caRes = await initCaRequest(caInfo);
+                    caInfo.value.lifetime = parseInt(caInfo.value.lifetime);
+                    let caRes = await initCaRequest(caInfo.value);
                     if(caRes.code === 0){
                         context.emit('go');
                     }else{

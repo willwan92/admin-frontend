@@ -5,10 +5,6 @@
       <n-form-item style="width:260px" label="密钥索引" path="keyindex">
         <n-input v-model:value="params.keyindex" placeholder="请输入密钥索引" />
       </n-form-item>
-      <n-form-item label="密钥类型" path="keytype" label-width="80">
-        <n-select style="width:120px" v-model:value="params.keytype"
-          :options="secrekeyControl.typeOptions" />
-      </n-form-item>
       <n-space>
         <n-button type="info" @click="reloadTable">
           <template #icon>
@@ -33,8 +29,17 @@
         </n-icon>
       </template>
     </n-button>
-    <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="serviceRef"
-      :actionColumn="actionColumn"></BasicTable>
+
+    <n-tabs type="line" animated>
+      <n-tab-pane name="SM2" tab="SM2密钥">
+        <BasicTable :toolbarShow=false :columns="columns" :request="loadSM2DataTable" :row-key="(row) => row.id" ref="serviceSm2Ref"
+          :actionColumn="actionColumn"></BasicTable>
+      </n-tab-pane>
+      <n-tab-pane name="SM1SM4" tab="对称密钥">
+        <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="serviceRef"
+          :actionColumn="actionColumn"></BasicTable>
+      </n-tab-pane>
+    </n-tabs>
 
     <n-modal v-model:show="secrekeyControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
       style="width:600px">
@@ -79,6 +84,7 @@ const columns = [
 
 
 const serviceRef = ref();
+const serviceSm2Ref = ref();
 const secrekeyEditRef = ref();
 const layerMsg = useMessage();
 const layerDialog = useDialog();
@@ -99,8 +105,7 @@ const secrekeyInfo = reactive({
   "keylen":""
 })
 const params = reactive({
-  keyindex:"",
-  keytype: 'sm1'
+  keyindex:""
 });
 
 const actionColumn = reactive({
@@ -131,8 +136,7 @@ function saveEdit() {
     })
   };
 function resetParams() {
-  params.createTime = new Date();
-  params.secreIndex = '';
+  params.keyindex = '';
   reloadTable();
 }
 function closeEdit() {
@@ -142,7 +146,7 @@ function closeEdit() {
 function clearEdit() {
   secrekeyInfo.keytype = "";
   secrekeyInfo.keyindex = "";
-  secrekeyInfo.keylen = "null";
+  secrekeyInfo.keylen = "";
   secrekeyControl.secrekeyId = null;
 }
 function deleteSecrekey(row) {
@@ -152,12 +156,12 @@ function deleteSecrekey(row) {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      deleteRequest(row.keyindex)
+      deleteRequest(row.keyindex,row.keytype);
     }
   })
 }
-const deleteRequest = async (id) => {
-  let deleteRespons = await deleteSecrekeyRequest(id);
+const deleteRequest = async (id,keytype) => {
+  let deleteRespons = await deleteSecrekeyRequest(id,{keytype:keytype});
   if (deleteRespons.code != 0) {
     layerMsg.error(deleteRespons.message || "新增失败");
   } else {
@@ -184,12 +188,12 @@ const addRequest = async () => {
   }
 }
 
-const loadDataTable = async (res) => {
+const loadSM2DataTable = async (res) => {
   let postPager = {
     pageNo:res.page,
     pageSize:res.pageSize
   }
-  let userList = await getSecrekeyList({ ...params, ...postPager });
+  let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm2"} });
   return new Promise((resolve) => {
     let rData = {
       list: userList.result.data,
@@ -200,8 +204,31 @@ const loadDataTable = async (res) => {
     resolve(rData);
   })
 };
+
+const loadDataTable = async (res) => {
+  let postPager = {
+    pageNo:res.page,
+    pageSize:res.pageSize
+  }
+  let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm1"} });
+  return new Promise((resolve) => {
+    let rData = {
+      list: userList.result.data,
+      page: parseInt(userList.result.pageNo),
+      pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
+      pageSize: parseInt(userList.result.pageSize)
+    }
+    resolve(rData);
+  })
+};
+
 function reloadTable() {
-  serviceRef.value.reload();
+  if(serviceRef.value){
+    serviceRef.value.reload();
+  }
+  if(serviceSm2Ref.value){
+    serviceSm2Ref.value.reload();
+  }
 }
 
 function addSecrekey() {

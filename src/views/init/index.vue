@@ -41,7 +41,7 @@ const bigStepArr = ref([
   {title:"管理卡初始化"},
   // {title:"设备密钥初始化"},
   {title:"证书初始化"},
-  {title:"三元初始化"}
+  {title:"三员初始化"}
 ])
 const generateSecretKey = async () => {
   let skRes = await initSecretKeyRequest();
@@ -148,7 +148,7 @@ const doLogout = () => {
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
   height: calc(100vh - 144px);
-  overflow: hidden;
+  overflow-y:auto;
   padding: 15px 20px 0;
 }
 </style>

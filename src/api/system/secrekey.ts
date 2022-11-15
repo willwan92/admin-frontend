@@ -53,11 +53,12 @@ export function getSecrekeyList(params) {
  *
  * @description：删除白名单
  */
- export function deleteSecrekeyRequest(id) {
+ export function deleteSecrekeyRequest(id,params) {
   return http.request<BasicResponseModel>(
     {
       url: `/keys/${id}`,
-      method: 'DELETE'
+      method: 'DELETE',
+      data:params
     },
     {
       isTransformResponse: false,

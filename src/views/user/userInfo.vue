@@ -69,7 +69,8 @@
 
 <script lang="ts" setup>
   import {reactive,ref} from 'vue';
-  import { FormInst, useMessage } from 'naive-ui'
+  import { FormInst, FormItemRule, useMessage } from 'naive-ui'
+  import {PWD_REGEXP} from './../../plugins/regexp.ts'
   const formRef = ref<FormInst | null>(null);
   const layerMsg = useMessage();
   const editControl = reactive({
@@ -84,7 +85,14 @@
       trigger: ['blur', 'change'], message: '请选择角色'
     },
     status: { required: true, trigger: ['blur', 'input'], message: '请选择用户状态' },
-    password: { required: true, trigger: ['blur', 'input'], message: '请输入密码' },
+    password: { required: true,validator(rule:FormItemRule,value:string){
+      if(!value){
+        return new Error("请输入密码")
+      }else if(!PWD_REGEXP.test(value)){
+        return new Error("密码必须包含英文字母数字特殊字符")
+      }
+      return true;
+    }, trigger: ['blur', 'input']},
   })
   const props = defineProps(['isAdd','editId','editInfo']);
   const checkForm = (cb) => {
