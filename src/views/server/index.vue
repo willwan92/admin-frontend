@@ -45,7 +45,7 @@
           <div>{{serverControl.title}}</div>
         </template>
         <div>
-          <editServer ref="serverEditRef" :serverInfo="serverInfo" :serverId="serverControl.serverId" :isAdd="serverControl.isAdd" />
+          <editServer ref="serverEditRef" :ipList="ipList" :serverInfo="serverInfo" :serverId="serverControl.serverId" :isAdd="serverControl.isAdd" />
         </div>
         <template #action>
           <n-space>
@@ -63,6 +63,7 @@
   import {
     getServerList, addServerRequest, deleteServerRequest
   } from '@/api/system/server';
+  import { getInterfaceIpList } from '@/api/system/interface';
   import editServer from './editServer.vue'
   import { PlusOutlined,SearchOutlined,ReloadOutlined, EditOutlined, DeleteOutlined } from '@vicons/antd'
   import { NButton, useMessage, useDialog } from 'naive-ui'
@@ -92,8 +93,16 @@
       }
     }
   ];
-  
-  
+  let ipList = ref([]);
+  let getIpList = async ()=>{
+      let ipListRes = await getInterfaceIpList();
+      let options = [];
+      for(let i=0;i<ipListRes.result.length;i++){
+        options.push({label:ipListRes.result[i].ip,value:ipListRes.result[i].ip});
+      }
+      ipList.value = options;
+  }
+  getIpList();
   const serviceRef = ref();
   const serverEditRef = ref();
   const layerMsg = useMessage();

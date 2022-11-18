@@ -5,7 +5,7 @@
     </n-steps>
     <n-carousel :current-index="carousIndex" :show-dots="false">
       <template v-for="item in 13">
-        <CardInfo v-if="item != 13 && infoShow" @go="next" :infoModel = "infoModel"></CardInfo>
+        <CardInfo v-if="item != 13 && infoShow" @go="next" :cardIndex="item" :infoModel = "infoModel"></CardInfo>
         <CardLogin v-if="item != 13 && loginShow" @go="next" :loginModel = "loginModel"></CardLogin>
         <n-space justify="center" v-if="item == 13" :style="{'margin-top':'30px'}">
           <n-button type="info" @click="finishedInit">完成</n-button>
@@ -38,15 +38,14 @@ const stepsArr = ref([
   { title: '初始化完成' }
 ]);
 const infoModel = ref({
-    name: null,
-    keyser: null,
-    password: null
+    name: "",
+    phone: "",
+    type:"",
+    password: ""
 })
 const emit = defineEmits(['go']);
 const loginModel = ref({
-    userName: null,
-    sequencCode: null,
-    loginPassword: null
+    password: ""
 })
 const finishedInit = () => {
   emit('go');
@@ -67,17 +66,16 @@ const next = () => {
     infoShow.value = true;
     loginShow.value = false;
     loginModel.value = {
-      userName: null,
-      sequencCode: null,
-      loginPassword: null
+      password:""
     }
   }else if(loginSteps.findIndex((item) => current.value === item) >=0){
     infoShow.value = false;
     loginShow.value = true;
     infoModel.value = {
-      userName: null,
-      UKey: null,
-      PIN: null
+      name: "",
+      phone: "",
+      type:"",
+      password: ""
     }
   }else{
     infoShow.value = false;

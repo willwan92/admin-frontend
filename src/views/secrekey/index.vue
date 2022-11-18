@@ -22,13 +22,30 @@
         </n-button>
       </n-space>
     </n-form>
-    <n-button type="info" ghost @click="addSecrekey">生产密钥
-      <template #icon>
-        <n-icon>
-          <PlusOutlined />
-        </n-icon>
-      </template>
-    </n-button>
+
+    <n-space>
+      <n-button type="info" ghost @click="addSecrekey">生产密钥
+        <template #icon>
+          <n-icon>
+            <PlusOutlined />
+          </n-icon>
+        </template>
+      </n-button>
+      <n-button type="warning" ghost @click="secrekeyBackups">密钥备份
+        <template #icon>
+          <n-icon>
+            <BackupFilled />
+          </n-icon>
+        </template>
+      </n-button>
+      <n-button type="warning" ghost @click="secrekeyRecovery">密钥恢复
+        <template #icon>
+          <n-icon>
+            <RefreshRound />
+          </n-icon>
+        </template>
+      </n-button>
+    </n-space>
 
     <n-tabs type="line" animated>
       <n-tab-pane name="SM2" tab="SM2密钥">
@@ -56,6 +73,18 @@
         </n-space>
       </template>
     </n-modal>
+
+    <n-modal v-model:show="backupRecovery.show" preset="dialog" title="Dialog" :mask-closable="false"
+      style="width:1000px">
+      <template #header>
+        <div>{{backupRecovery.title}}</div>
+      </template>
+      <div>
+        <keyBackups v-if="backupRecovery.isBackup" @closeModal="closeModal"/>
+        <keyRecovery v-if="!backupRecovery.isBackup" @closeModal="closeModal"/>
+      </div>
+    </n-modal>
+
   </n-card>
 </template>
 
@@ -66,7 +95,10 @@ import {
   getSecrekeyList, addSecrekeyRequest, deleteSecrekeyRequest
 } from '@/api/system/secrekey';
 import editSecrekey from './editSecrekey.vue'
+import keyBackups from './keyBackups.vue'
+import keyRecovery from './keyRecovery.vue'
 import { PlusOutlined,SearchOutlined,ReloadOutlined, EditOutlined, DeleteOutlined } from '@vicons/antd'
+import { BackupFilled,RefreshRound } from '@vicons/material'
 import { NButton, useMessage, useDialog } from 'naive-ui'
 
 const columns = [
@@ -99,6 +131,11 @@ const secrekeyControl = reactive({
     pageSize: 10
   }
 })
+const backupRecovery = reactive({
+  show:false,
+  title:"密钥备份",
+  isBackup:true
+})
 const secrekeyInfo = reactive({
   "keytype": "",
   "keyindex": "",
@@ -130,6 +167,19 @@ const actionColumn = reactive({
     ]
   },
 });
+const secrekeyBackups = () => {
+  backupRecovery.isBackup = true;
+  backupRecovery.title = '密钥备份';
+  backupRecovery.show = true;
+}
+const secrekeyRecovery = () => {
+  backupRecovery.isBackup = false;
+  backupRecovery.title = '密钥恢复';
+  backupRecovery.show = true;
+}
+const closeModal = () => {
+  backupRecovery.show = false;
+}
 function saveEdit() {
     secrekeyEditRef.value.checkForm(function(){
       addRequest();

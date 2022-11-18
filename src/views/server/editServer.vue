@@ -2,7 +2,7 @@
     <n-form ref="serverInfoRef" label-placement="left" label-width="auto" :model="serverInfo" :rules="rules" size="medium"
         style="width:100%">
         <n-form-item label="服务地址" path="ip">
-            <n-input v-model:value="serverInfo.ip" placeholder="输入服务地址" />
+            <n-select v-model:value="serverInfo.ip" :options="ipList" />
         </n-form-item>
         <n-form-item label="服务端口" path="port">
             <n-input v-model:value="serverInfo.port" placeholder="输入服务端口" />
@@ -14,8 +14,8 @@
 </template>
   
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
-import { FormInst, useMessage } from 'naive-ui'
+import { reactive, ref, onMounted } from 'vue';
+import { FormInst, useMessage } from 'naive-ui';
 const serverInfoRef = ref<FormInst | null>(null);
 const layerMsg = useMessage();
 const serverControl = reactive({
@@ -29,7 +29,7 @@ const rules = reactive({
         trigger: ['blur', 'change'], message: '请选择服务类型'
     }
 })
-const props = defineProps(['isAdd', 'serverId', 'serverInfo']);
+const props = defineProps(['isAdd', 'serverId', 'serverInfo','ipList']);
 const checkForm = (cb) => {
     serverInfoRef.value?.validate((errors) => {
         if (errors) {

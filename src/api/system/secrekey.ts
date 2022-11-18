@@ -35,7 +35,7 @@ export function getSecrekeyList(params) {
 }
 /**
  *
- * @description：新增白名单
+ * @description：新增密钥
  */
  export function addSecrekeyRequest(params) {
   return http.request<BasicResponseModel>(
@@ -51,13 +51,103 @@ export function getSecrekeyList(params) {
 }
 /**
  *
- * @description：删除白名单
+ * @description：删除密钥
  */
  export function deleteSecrekeyRequest(id,params) {
   return http.request<BasicResponseModel>(
     {
       url: `/keys/${id}`,
       method: 'DELETE',
+      data:params
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+
+
+
+/**
+ *
+ * @description：密钥备份相关接口
+ */
+/**
+ *
+ * @description：密钥备份时管理卡登录
+ */
+ export function cardLoginRequest(params) {
+  return http.request<BasicResponseModel>(
+    {
+      url: `/keybackup/mngcardLogin`,
+      method: 'POST',
+      data:params
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+/**
+ *
+ * @description：密钥备份时选择备份类型
+ */
+ export function backupTypeRequest(params) {
+  return http.request<BasicResponseModel>(
+    {
+      url: `/keybackup/selectBackupType`,
+      method: 'POST',
+      data:params
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+
+/**
+ *
+ * @description：密钥备份时管理卡备份
+ */
+ export function cardBackupRequest(params) {
+  return http.request<BasicResponseModel>(
+    {
+      url: `/keybackup/mngcardBackup`,
+      method: 'POST',
+      data:params
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+
+/**
+ *
+ * @description：密钥恢复
+ */
+ export function keyRecoveryRequest(params) {
+  return http.request<BasicResponseModel>(
+    {
+      url: `/keybackup/restoreInit`,
+      method: 'POST',
+      data:params
+    },
+    {
+      isTransformResponse: false,
+    }
+  );
+}
+
+/**
+ *
+ * @description：管理卡恢复
+ */
+ export function cardRecoveryRequest(params) {
+  return http.request<BasicResponseModel>(
+    {
+      url: `/keybackup/mngcardRestore`,
+      method: 'POST',
       data:params
     },
     {

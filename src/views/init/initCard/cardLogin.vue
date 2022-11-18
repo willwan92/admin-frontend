@@ -1,16 +1,10 @@
 <template>
-    <n-form ref="formRef" :model="model" :rules="rules" label-placement="left" label-width="auto"
+    <n-form ref="formRef" :model="loginModel" :rules="rules" label-placement="left" label-width="auto"
         require-mark-placement="right-hanging" size="small" :style="{
           maxWidth: '640px',margin:'30px auto'
         }">
-        <n-form-item label="管理卡名" path="userName">
-            <n-input v-model:value="model.userName" placeholder="输入管理卡名" />
-        </n-form-item>
-        <n-form-item label="序列号" path="sequencCode">
-            <n-input v-model:value="model.sequencCode" placeholder="输入序列号" />
-        </n-form-item>
-        <n-form-item label="登录口令" path="loginPassword">
-            <n-input v-model:value="model.loginPassword" placeholder="输入登录口令" />
+        <n-form-item label="UKey PIN码" path="password">
+            <n-input v-model:value="loginModel.password" placeholder="输入ukey PIN码" />
         </n-form-item>
         <n-space justify="center" @click="loginGo"><n-button type="info">登录</n-button></n-space>
     </n-form>
@@ -38,26 +32,11 @@ export default defineComponent({
         }
         return {
             formRef,
-            model: ref({
-                userName: null,
-                sequencCode: null,
-                loginPassword: null
-            }),
             rules: {
-                userName: {
+                password: {
                     required: true,
                     trigger: ['blur', 'input'],
-                    message: '请输入管理卡名'
-                },
-                sequencCode: {
-                    required: true,
-                    trigger: ['blur', 'input'],
-                    message: '请输入序列号'
-                },
-                loginPassword: {
-                    required: true,
-                    trigger: ['blur', 'input'],
-                    message: '请输入登录口令'
+                    message: '输入ukeyPIN码'
                 }
             },
             loginGo(){
