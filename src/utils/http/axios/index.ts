@@ -33,11 +33,10 @@ const transform: AxiosTransform = {
   transformRequestData: (res: AxiosResponse<Result>, options: RequestOptions) => {
     const {
       isShowMessage = true,
-      isShowErrorMessage,
       isShowSuccessMessage,
       successMessageText,
       errorMessageText,
-      isTransformResponse,
+      isTransformResponse = true,
       isReturnNativeResponse,
     } = options;
 
@@ -72,7 +71,7 @@ const transform: AxiosTransform = {
           type: 'success',
           content: successMessageText || message || '操作成功！',
         });
-      } else if (!hasSuccess && (errorMessageText || isShowErrorMessage)) {
+      } else if (!hasSuccess && options.errorMessageMode !== 'modal') {
         // 是否显示自定义信息提示
         $message.error(message || errorMessageText || '操作失败！');
       } else if (!hasSuccess && options.errorMessageMode === 'modal') {
@@ -186,16 +185,15 @@ const transform: AxiosTransform = {
         : token;
     }
 
-    
     // 从cookie中获取csrfToken
-    const csrfToken = storage.getCookie('csrfToken')
+    const csrfToken = storage.getCookie('csrfToken');
     config.headers['x-csrf-token'] = csrfToken || '';
 
     return config;
   },
 
   /**
-   * @description: 响应错误处理
+   * @description: 响应错误处理（请求失败时执行）
    */
   responseInterceptorsCatch: (error: any) => {
     const $dialog = window['$dialog'];
