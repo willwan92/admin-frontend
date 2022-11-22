@@ -1,70 +1,31 @@
 import { http } from '@/utils/http/axios';
-import { BasicResponseModel } from '@/api/models/response/basic';
+import { BasicResponse, PageResponse } from '@/api/models/basic';
+import { QueryIfaddrPageReq, QueryIfaddrRes, AddIfaddrReq } from '@/api/models/ifaddr';
 
-/**
- * @description：获取接口IP列表
- */
-export function getIfaddrList(params) {
-  let paramsStr = '';
-  for (let key in params) {
-    if (params[key]) {
-      paramsStr += key + '=' + params[key] + '&';
-    }
-  }
-  return http.request<BasicResponseModel>(
+export function getIfaddrList(params: QueryIfaddrPageReq) {
+  return http.request<BasicResponse<PageResponse<QueryIfaddrRes>>>(
     {
-      url: `/Ifaddrs?${paramsStr}`,
+      url: '/ifaddrs',
       method: 'GET',
+      params,
     },
     {
       isTransformResponse: false,
     }
   );
 }
-/**
- *
- * @description：新增接口IP
- */
-export function addIfaddrRequest(params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/Ifaddrs`,
-      method: 'POST',
-      data: params,
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
+
+export function addIfaddr(data: AddIfaddrReq) {
+  return http.request<BasicResponse>({
+    url: `/ifaddrs`,
+    method: 'POST',
+    data,
+  });
 }
-/**
- *
- * @description：删除接口IP
- */
-export function deleteIfaddrRequest(id) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/Ifaddrs/${id}`,
-      method: 'DELETE',
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改接口IP
- */
-export function editIfaddrRequest(id, params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/Ifaddrs/${id}`,
-      method: 'PATCH',
-      data: params,
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
+
+export function deleteIfaddr(ip) {
+  return http.request<BasicResponse>({
+    url: `/ifaddrs/${ip}`,
+    method: 'DELETE',
+  });
 }

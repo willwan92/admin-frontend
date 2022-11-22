@@ -21,11 +21,20 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 10,
       isRoot: true,
-      title:"系统管理",
+      title: '系统管理',
       activeMenu: 'system_user',
       icon: renderIcon(UserOutlined),
     },
     children: [
+      {
+        path: 'ifaddr',
+        name: 'system_ifaddr',
+        meta: {
+          title: '接口IP管理',
+          activeMenu: 'system_ifaddr',
+        },
+        component: () => import('@/views/system/ifaddr/index.vue'),
+      },
       {
         path: 'user',
         name: `system_user`,
@@ -70,9 +79,9 @@ const routes: Array<RouteRecordRaw> = [
           activeMenu: 'system_whitelist',
         },
         component: () => import('@/views/whitelist/index.vue'),
-      }
+      },
     ],
-  }
+  },
 ];
 
 export default routes;
