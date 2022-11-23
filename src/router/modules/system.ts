@@ -30,10 +30,19 @@ const routes: Array<RouteRecordRaw> = [
         path: 'ifaddr',
         name: 'system_ifaddr',
         meta: {
-          title: '接口IP管理',
+          title: '接口IP',
           activeMenu: 'system_ifaddr',
         },
         component: () => import('@/views/system/ifaddr/index.vue'),
+      },
+      {
+        path: 'sysroute',
+        name: 'system_sysroute',
+        meta: {
+          title: '系统路由',
+          activeMenu: 'system_sysroute',
+        },
+        component: () => import('@/views/system/sysroute/index.vue'),
       },
       {
         path: 'user',
