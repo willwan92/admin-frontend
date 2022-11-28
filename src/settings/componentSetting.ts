@@ -2,7 +2,7 @@ export default {
   table: {
     apiSetting: {
       // 当前页的字段名
-      pageField: 'page',
+      pageField: 'pageNo',
       // 每页数量字段名
       sizeField: 'pageSize',
       // 接口返回的数据字段名
