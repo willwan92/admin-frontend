@@ -86,7 +86,6 @@
     ],
   };
   const handleConfirmClick = () => {
-    console.log(formParams);
     formRef.value?.validate((errors) => {
       if (errors) {
         return;
