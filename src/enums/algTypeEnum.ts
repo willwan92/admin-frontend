@@ -1,10 +1,8 @@
-export enum AlgTypeEnum {
-  Sm1 = 'sm1',
-  Sm2 = 'sm2',
-  Sm3 = 'sm3',
-  Sm4 = 'sm4',
-  // 随机数
-  Random = 'random',
-  // 密码卡
-  Dev = 'dev',
-}
+export const AlgType = {
+  sm1: 'SM1算法',
+  sm2: 'SM2算法',
+  sm3: 'SM3算法',
+  sm4: 'SM4算法',
+  random: '随机数质量',
+  dev: '密码卡自检',
+};

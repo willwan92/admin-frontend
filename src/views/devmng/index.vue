@@ -1,23 +1,29 @@
 <template>
   <n-card class="card" title="" size="medium">
-    <n-grid x-gap="12" :cols="4">
+    <n-grid x-gap="15" :cols="4">
       <n-gi>
-        <div class="btn">
-          <PoweroffOutlined class="icon" />
-          <div class="text">关机</div>
-        </div>
+        <n-spin :show="state.isHalting">
+          <div class="btn" @click="handleHaltClick">
+            <PoweroffOutlined class="icon" />
+            <div class="text">{{ state.isHalting ? '正在关机...' : '关机' }}</div>
+          </div>
+        </n-spin>
       </n-gi>
       <n-gi>
-        <div class="btn">
-          <ReloadOutlined class="icon" />
-          <div class="text">重启</div>
-        </div>
+        <n-spin :show="state.isRebooting">
+          <div class="btn" @click="handleRebootClick">
+            <ReloadOutlined class="icon" />
+            <div class="text">{{ state.isRebooting ? '正在重启...' : '重启' }}</div>
+          </div>
+        </n-spin>
       </n-gi>
       <n-gi>
-        <div class="btn" @click="handleTestAlgClick">
-          <CheckCircleOutlined class="icon" />
-          <div class="text">设备自检</div>
-        </div>
+        <n-spin :show="state.isChecking">
+          <div class="btn" @click="handleTestAlgClick">
+            <CheckCircleOutlined class="icon" />
+            <div class="text">{{ state.isChecking ? '正在自检...' : '算法自检' }}</div>
+          </div>
+        </n-spin>
       </n-gi>
       <n-gi>
         <div> </div>
@@ -26,57 +32,101 @@
 </template>
 
 <script lang="ts" setup>
-  import { h } from 'vue';
-  import { testAlg } from '@/api/system/algTest';
-  import { AlgTypeEnum } from '@/enums/algTypeEnum';
+  import { h, reactive } from 'vue';
+  import { testAlg, reboot, halt } from '@/api/devmng';
+  import { AlgType } from '@/enums/algTypeEnum';
   import { PoweroffOutlined, ReloadOutlined, CheckCircleOutlined } from '@vicons/antd';
-  import { useDialog, NAlert } from 'naive-ui';
+  import { useDialog } from 'naive-ui';
 
-  // const message = useMessage();
   const dialog = useDialog();
+  const state = reactive({
+    isChecking: false,
+    isRebooting: false,
+    isHalting: false,
+  });
 
   function handleTestAlgClick() {
     dialog.warning({
       title: '系统提示',
-      content: `确定进行设备自检吗？`,
+      content: `确定进行算法自检吗？`,
       positiveText: '确定',
       negativeText: '取消',
       onPositiveClick: async () => {
-        // const promiseList = new Array<any>();
-        // for (const key in AlgTypeEnum) {
-        //   promiseList.push();
-        // }
-        // Promise.all(promiseList).then((values) => {
-        //   console.log(values);
-        // });
-        const p = testAlg({ type: AlgTypeEnum.Sm1 });
+        const promises: any[] = [];
+        let resList: any[] = [];
+
+        state.isChecking = true;
+        for (const key in AlgType) {
+          promises.push(testAlg({ type: key }));
+          resList.push(key);
+        }
+
+        const p = Promise.all(promises)
+          .then((res) => {
+            resList = resList.map((item, index) => {
+              return h('p', `${AlgType[item]}：${res[index].message}`);
+            });
+          })
+          .finally(() => {
+            state.isChecking = false;
+          });
+
         p.then(() => {
           dialog.info({
             title: '自检结果',
-            content: () =>
-              h('div', [
-                h('p', `${AlgTypeEnum.Sm1}算法正确`),
-                h('p', `${AlgTypeEnum.Sm1}算法正确`),
-              ]),
-            negativeText: '取消',
+            content: () => h('div', resList),
+            negativeText: '关闭',
           });
         });
       },
     });
   }
 
-  // const loadDataTable = async (params) => {
-  //   const { result } = await getIfaddrList({ ...searchFormRef.value.searchParams, ...params });
-  //   return new Promise((resolve) => {
-  //     let rData = {
-  //       list: result.data,
-  //       page: parseInt(result.pageNo),
-  //       pageCount: parseInt(result.total / result.pageSize + 1),
-  //       pageSize: parseInt(result.pageSize),
-  //     };
-  //     resolve(rData);
-  //   });
-  // };
+  function handleRebootClick() {
+    dialog.warning({
+      title: '系统提示',
+      content: `确定重启设备吗？`,
+      positiveText: '确定',
+      negativeText: '取消',
+      onPositiveClick: async () => {
+        state.isRebooting = true;
+        reboot()
+          .then(() => {
+            dialog.info({
+              title: '系统提示',
+              content: '系统正在重启，请稍后刷新页面重新登录',
+              negativeText: '关闭',
+            });
+          })
+          .finally(() => {
+            state.isRebooting = false;
+          });
+      },
+    });
+  }
+
+  function handleHaltClick() {
+    dialog.warning({
+      title: '系统提示',
+      content: `确定关机吗？`,
+      positiveText: '确定',
+      negativeText: '取消',
+      onPositiveClick: async () => {
+        state.isHalting = true;
+        halt()
+          .then(() => {
+            dialog.info({
+              title: '系统提示',
+              content: '系统正在关机，连接即将断开',
+              negativeText: '知道了',
+            });
+          })
+          .finally(() => {
+            state.isHalting = false;
+          });
+      },
+    });
+  }
 </script>
 
 <style lang="less" scoped>

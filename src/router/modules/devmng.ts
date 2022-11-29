@@ -19,9 +19,9 @@ const routes: Array<RouteRecordRaw> = [
     name: 'devmng',
     component: Layout,
     meta: {
-      sort: 10,
+      sort: 12,
       isRoot: true,
-      title: '设备管理',
+      title: '',
       activeMenu: 'devmng_index',
       icon: renderIcon(MacCommandOutlined),
     },

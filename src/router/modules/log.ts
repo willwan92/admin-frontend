@@ -19,9 +19,9 @@ const routes: Array<RouteRecordRaw> = [
     name: 'log',
     component: Layout,
     meta: {
-      sort: 11,
+      sort: 19,
       isRoot: true,
-      title: '日志审计',
+      title: '',
       activeMenu: 'syslog',
       icon: renderIcon(UnorderedListOutlined),
     },
