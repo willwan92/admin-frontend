@@ -5,14 +5,14 @@
         </n-steps>
         <div class="key-backup-con" style="margin-top:24px;">
           <n-spin :show="reqLoading">
-            <div class="key-backup-item" v-for="item in 9">
+            <div class="key-backup-item" v-for="item in 10">
               <div v-if="item == current">
                 <n-form v-if="loginShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
-                  <n-form-item label="管理卡号" path="cardNum">
+                  <!-- <n-form-item label="管理卡号" path="cardNum">
                       <n-input v-model:value="params.cardNum" placeholder="输入管理卡号" />
-                  </n-form-item>
+                  </n-form-item> -->
                   <n-form-item label="PIN码" path="password">
-                      <n-input v-model:value="params.password" placeholder="输入PIN码" />
+                      <n-input type="password" v-model:value="params.password" placeholder="输入PIN码" />
                   </n-form-item>
                   <n-space justify="center">
                     <n-button type="info" @click="cardLogin">登录</n-button>
@@ -33,17 +33,20 @@
                     <n-button type="info" @click="keyBackup">确定</n-button>
                   </n-space>
                 </n-form>
-                <n-form v-if="recoveryShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
-                  <n-form-item label="管理卡号" path="cardNum">
+                <n-form v-if="backupsShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
+                  <!-- <n-form-item label="管理卡号" path="cardNum">
                       <n-input v-model:value="params.cardNum" placeholder="输入管理卡号" />
-                  </n-form-item>
+                  </n-form-item> -->
                   <n-form-item label="PIN码" path="password">
-                      <n-input v-model:value="params.password" placeholder="输入PIN码" />
+                      <n-input type="password" v-model:value="params.password" placeholder="输入PIN码" />
                   </n-form-item>
                   <n-space justify="center">
                     <n-button type="info" @click="cardBackup">备份</n-button>
                   </n-space>
                 </n-form>
+                <n-space v-if="downloadShow" justify="center">
+                  <n-button type="info" @click="downloadFile">下载备份文件</n-button>
+                </n-space>
               </div>
             </div>
           </n-spin>
@@ -56,33 +59,34 @@
     import { StepsProps,useMessage } from 'naive-ui';
     import {cardLoginRequest,backupTypeRequest,cardBackupRequest} from '@/api/system/secrekey'
     const emits = defineEmits(['closeModal']);
-    // emits('closeModal');
     const currentStatus = ref<StepsProps['status']>('process');
     const layerMsg = useMessage();
     const current = ref<number>(1);
     const stepsArr = ref([
-        { title: '管理卡1登录' },
-        { title: '管理卡2登录' },
-        { title: '管理卡3登录' },
+        { title: '管理卡1登录',cardNum:"1" },
+        { title: '管理卡2登录',cardNum:"2" },
+        { title: '管理卡3登录',cardNum:"3" },
         { title: '选择备份类型' },
-        { title: '管理卡3备份' },
-        { title: '管理卡4备份' },
-        { title: '管理卡5备份' },
-        { title: '管理卡1备份' },
-        { title: '管理卡2备份' }
+        { title: '管理卡3备份',cardNum:"3" },
+        { title: '管理卡4备份',cardNum:"4" },
+        { title: '管理卡5备份',cardNum:"5" },
+        { title: '管理卡1备份',cardNum:"1" },
+        { title: '管理卡2备份',cardNum:"2" },
+        { title: '备份完成'}
     ]);
     const params = reactive({
       cardNum:'',
-      password:"12345678",
+      password:"",
       type:"ecc"
     })
     const eccType = ref('info');
     const allType = ref('');
     const reqLoading = ref(false);
+    const currentCard = ref<any>('1');
     const cardLogin = async () => {
       reqLoading.value = true;
       let loginRes = await cardLoginRequest({
-        cardNum:parseInt(params.cardNum),
+        cardNum:parseInt(currentCard.value),
         password:params.password
       })
       if(loginRes.code == 0){
@@ -110,7 +114,7 @@
     const cardBackup =async ()=> {
       reqLoading.value = true;
       let backupRes = await cardBackupRequest({
-        cardNum:parseInt(params.cardNum),
+        cardNum:parseInt(currentCard.value),
         password:params.password
       })
       if(backupRes.code == 0){
@@ -123,7 +127,8 @@
     }
     const loginShow = ref(true);
     const typeShow = ref(false);
-    const recoveryShow = ref(false);
+    const backupsShow = ref(false);
+    const downloadShow = ref(false);
     const keyTypeClick = (t) => {
       if(t === 'ecc'){
         eccType.value = 'info'
@@ -134,31 +139,48 @@
       }
       params.type = t;
     }
+    const downloadFile = () => {
+      window.open("http://222.128.6.205:10444/file/download/encryption_card_data");
+      emits('closeModal',true);
+    }
     watch(current,(nv) => {
       clearParams();
       if(nv === 1 || nv === 2 || nv === 3){
         loginShow.value = true;
         typeShow.value = false;
-        recoveryShow.value = false;
+        backupsShow.value = false;
+        downloadShow.value = false;
+        currentCard.value = stepsArr.value[nv-1].cardNum ? stepsArr.value[nv-1].cardNum : "0"
       }else if(nv === 4){
         loginShow.value = false;
         typeShow.value = true;
-        recoveryShow.value = false;
-        params.password = '12345678';
+        backupsShow.value = false;
+        params.password = '';
+        downloadShow.value = false;
+      }else if(nv === 11){
+        loginShow.value = false;
+        typeShow.value = false;
+        backupsShow.value = false;
+        params.password = '';
+        downloadShow.value = true;
       }else{
         loginShow.value = false;
         typeShow.value = false;
-        recoveryShow.value = true;
+        backupsShow.value = true;
+        downloadShow.value = false;
       }
     })
     const clearParams = () => {
       params.type = 'ecc';
-      params.password = '12345678';
+      params.password = '';
       params.cardNum = '';
     }
 </script>
   
 <style>
+.n-steps .n-step-indicator .n-step-indicator-slot .n-step-indicator-slot__index{
+  font-size: 12px;
+}
 .n-steps .n-step-content .n-step-content-header .n-step-content-header__title {
   font-size: 12px;
 }
@@ -169,11 +191,6 @@
 
 .n-steps .n-step-indicator .n-step-indicator-slot .n-base-icon {
   color: #18a058;
-}
-
-.n-steps .n-step-indicator {
-  width: 16px;
-  height: 16px;
 }
 
 .n-steps .n-step--finish-status .n-step-indicator {

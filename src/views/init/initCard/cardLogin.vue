@@ -4,7 +4,7 @@
           maxWidth: '640px',margin:'30px auto'
         }">
         <n-form-item label="UKey PIN码" path="password">
-            <n-input v-model:value="loginModel.password" placeholder="输入ukey PIN码" />
+            <n-input type="password" v-model:value="loginModel.password" placeholder="输入ukey PIN码" />
         </n-form-item>
         <n-space justify="center" @click="loginGo"><n-button type="info">登录</n-button></n-space>
     </n-form>

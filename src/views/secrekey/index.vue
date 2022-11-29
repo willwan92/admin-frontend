@@ -137,7 +137,7 @@ const backupRecovery = reactive({
   isBackup:true
 })
 const secrekeyInfo = reactive({
-  "keytype": "",
+  "keytype": "sm2",
   "keyindex": "",
   "keylen":""
 })
@@ -177,8 +177,10 @@ const secrekeyRecovery = () => {
   backupRecovery.title = '密钥恢复';
   backupRecovery.show = true;
 }
-const closeModal = () => {
+const closeModal = (isFinish) => {
   backupRecovery.show = false;
+  isFinish?reloadTable():""
+
 }
 function saveEdit() {
     secrekeyEditRef.value.checkForm(function(){
@@ -226,8 +228,9 @@ const addRequest = async () => {
       delete postObj[k]
     }
   }
+  console.log(postObj);
   postObj['keyindex'] = parseInt(postObj['keyindex']);
-  postObj['keylen'] = parseInt(postObj['keylen']);
+  postObj['keylen']?postObj['keylen'] = parseInt(postObj['keylen']):'';
   let saveRespons = await addSecrekeyRequest(postObj);
   if (saveRespons.code != 0) {
     layerMsg.error(saveRespons.message || "新增失败");

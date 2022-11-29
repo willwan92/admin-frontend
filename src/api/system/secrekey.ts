@@ -126,12 +126,12 @@ export function getSecrekeyList(params) {
  *
  * @description：密钥恢复
  */
- export function keyRecoveryRequest(params) {
+ export function keyRecoveryRequest() {
   return http.request<BasicResponseModel>(
     {
       url: `/keybackup/restoreInit`,
       method: 'POST',
-      data:params
+      data:{password:'12345678'}
     },
     {
       isTransformResponse: false,

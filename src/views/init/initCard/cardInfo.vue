@@ -3,8 +3,8 @@
         require-mark-placement="right-hanging" size="small" :style="{
           maxWidth: '640px',margin:'30px auto'
         }">
-        <n-form-item label="管理卡名" path="name">
-            <n-input v-model:value="infoModel.name" placeholder="输入管理卡名" />
+        <n-form-item :label="cardIndex==11?'操作卡名':'管理卡名'" path="name">
+            <n-input v-model:value="infoModel.name" :placeholder="cardIndex==11?'输入操作卡名':'输入管理卡名'" />
         </n-form-item>
         <n-form-item label="PIN码" path="password">
             <n-input v-model:value="infoModel.password" type="password" placeholder="输入PIN码" />

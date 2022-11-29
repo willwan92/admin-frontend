@@ -25,7 +25,7 @@
             <n-input v-model:value="model.email" placeholder="输入邮箱" />
         </n-form-item>
         <n-form-item label="有效期" path="lifetime">
-            <n-input v-model:value="model.lifetime" placeholder="输入有效期" />
+            <n-input v-model:value="model.lifetime" placeholder="输入有效期" /><span style="margin-left:15px">天</span>
         </n-form-item>
         <n-form-item label="CA私钥口令" path="password">
             <n-input v-model:value="model.password" type="password" placeholder="输入CA私钥口令" />

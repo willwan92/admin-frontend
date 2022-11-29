@@ -63,7 +63,7 @@
         <div>修改密码</div>
       </template>
       <div>
-        <n-form ref="psdFormRef" label-placement="left" label-width="auto" :model="disRole" size="medium"
+        <n-form ref="psdFormRef" label-placement="left" label-width="auto" :model="mpm" size="medium"
           style="width:100%">
           <n-form-item label="新密码" path="password">
             <n-input v-model:value="mpm.password" type="password" placeholder="输入新密码" />
@@ -77,6 +77,28 @@
         </n-space>
       </template>
     </n-modal>
+
+    <n-modal v-model:show="disRole.show" preset="dialog" title="Dialog" :mask-closable="false" style="width:300px">
+      <template #header>
+        <div>分配角色</div>
+      </template>
+      <div>
+        <n-form ref="roleFormRef" label-placement="left" label-width="auto" :model="disRole" size="medium"
+          style="width:100%">
+          <n-form-item label="选择角色" path="role" label-width="80">
+            <n-select style="width:140px" v-model:value="disRole.role" placeholder="用户状态"
+              :options="editControl.roleOptions" />
+          </n-form-item>
+        </n-form>
+      </div>
+      <template #action>
+        <n-space>
+          <n-button type="info" @click="saveRole">确定</n-button>
+          <n-button @click="closeRole">取消</n-button>
+        </n-space>
+      </template>
+    </n-modal>
+
   </n-card>
 </template>
 
@@ -99,9 +121,13 @@ const columns = [
     align: 'center'
   },
   {
-    title: '用户昵称',
-    key: 'nickname',
-    align: 'center'
+    title: '用户角色',
+    key: 'role',
+    align: 'center',
+    render(row){
+      let userRole = editControl.roleOptions.find((item) => { return item.value == row.role})?.label;
+      return userRole?userRole:"未知"
+    }
   },
   {
     title: '手机号',
