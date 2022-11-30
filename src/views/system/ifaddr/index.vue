@@ -59,7 +59,7 @@
             type: row.admin ? 'info' : 'default',
           },
           {
-            default: () => (row.ping ? '是' : '否'),
+            default: () => (row.admin ? '是' : '否'),
           }
         );
       },

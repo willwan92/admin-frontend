@@ -27,7 +27,7 @@
   import { reactive, ref, h } from 'vue';
   import { BasicTable } from '@/components/Table';
   import { getSysrouteList, deleteSysroute } from '@/api/system/sysroute';
-  import EditModal from '../ifaddr/components/EditModal.vue';
+  import EditModal from './components/EditModal.vue';
   import SearchForm from './components/SearchForm.vue';
   import { PlusOutlined } from '@vicons/antd';
   import { NButton, useMessage, useDialog } from 'naive-ui';
