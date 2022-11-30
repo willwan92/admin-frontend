@@ -26,8 +26,8 @@
                 </n-button>
             </n-button-group>
         </n-form-item>
-        <n-form-item label="密钥长度" path="keylen">
-            <n-input v-model:value="secrekeyInfo.keylen" placeholder="输入密钥长度" />
+        <n-form-item label="密钥长度" path="keylen" v-if="smType=='info'">
+            <n-select v-model:value="secrekeyInfo.keylen" placeholder="选择密钥长度" :options="secrekeyControl.keylenOptions" />
         </n-form-item>
     </n-form>
 </template>
@@ -39,14 +39,15 @@ const secrekeyInfoRef = ref<FormInst | null>(null);
 const layerMsg = useMessage();
 const secrekeyControl = reactive({
     typeOptions: [{ label: "请选择密钥类型", value:""}, { label: "sm1", value:"sm1"}, { label: "sm2", value: "sm2" }, { label: "sm4", value: "sm4" }],
+    keylenOptions:[{ label: "选择密钥长度", value:""}, { label: "16", value:"16"}, { label: "32", value: "32" }]
 })
 const sm2Type = ref('info');
 const sm1Type = ref('info');
 const sm4Type = ref('');
 const smType = ref('');
 const rules = reactive({
-    keylen: { required: true, trigger: ['blur', 'input'], message: '请输入服务地址' },
-    keyindex: { required: true, trigger: ['blur', 'input'], message: '请输入服务端口' }
+    keylen: { required: true, trigger: ['blur', 'change'], message: '请选择你要长度' },
+    keyindex: { required: true, trigger: ['blur', 'input'], message: '请输入密钥索引' }
 })
 const props = defineProps(['isAdd', 'secrekeyId', 'secrekeyInfo']);
 const checkForm = (cb) => {

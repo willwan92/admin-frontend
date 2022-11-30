@@ -43,12 +43,12 @@ const infoModel = ref({
     type:"",
     password: ""
 })
-const emit = defineEmits(['go']);
+const emits = defineEmits(['go']);
 const loginModel = ref({
     password: ""
 })
 const finishedInit = () => {
-  emit('go');
+  emits('go');
 }
 const carousIndex = ref<number>(0);
 const infoSteps = [1,3,5,7,9,11];
@@ -99,6 +99,7 @@ const next = () => {
 .n-steps .n-step-indicator {
   width: 16px;
   height: 16px;
+  font-size: 12px;
 }
 
 .n-steps .n-step--finish-status .n-step-indicator {
