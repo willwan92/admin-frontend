@@ -12,15 +12,17 @@ import userInit from '@/views/user/index.vue'
 import { useUserStore } from '@/store/modules/user';
 import { TABS_ROUTES } from '@/store/mutation-types';
 import { useRouter, useRoute } from 'vue-router';
+import { setUserStatusRequest } from '@/api/system/user';
 const showPager = ref<boolean>(false);
 const showSearch = ref<boolean>(false);
 const userStore = useUserStore();
 const message = useMessage();
 const router = useRouter();
 const route = useRoute();
-const initFinish = function(){
+const initFinish = async function(){
+    await setUserStatusRequest('1', { status: 'disable' });
     userStore.logout().then(() => {
-        message.success('成功退出登录');
+        message.success('初始化完成');
         // 移除标签页
         localStorage.removeItem(TABS_ROUTES);
         router

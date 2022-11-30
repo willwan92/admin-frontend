@@ -58,15 +58,21 @@
         </n-space>
       </template>
     </n-modal>
-    <n-modal v-model:show="mpm.show" preset="dialog" title="Dialog" :mask-closable="false" style="width:300px">
+    <n-modal v-model:show="mpm.show" preset="dialog" title="Dialog" :mask-closable="false" style="width:500px">
       <template #header>
         <div>修改密码</div>
       </template>
       <div>
-        <n-form ref="psdFormRef" label-placement="left" label-width="auto" :model="mpm" size="medium"
+        <n-form ref="psdFormRef" label-placement="left" label-width="auto" :rules="setPasswordRules" :model="mpm" size="medium"
           style="width:100%">
+          <n-form-item label="原密码" path="oldPassword">
+            <n-input v-model:value="mpm.oldPassword" type="password" placeholder="输入原密码" />
+          </n-form-item>
           <n-form-item label="新密码" path="password">
             <n-input v-model:value="mpm.password" type="password" placeholder="输入新密码" />
+          </n-form-item>
+          <n-form-item label="确认新密码" path="confirmPassword">
+            <n-input v-model:value="mpm.confirmPassword" type="password" placeholder="再次输入新密码" />
           </n-form-item>
         </n-form>
       </div>
@@ -112,7 +118,20 @@ import {
 import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined, 
   SearchOutlined, ReloadOutlined } from '@vicons/antd'
 import userInfo from './userInfo.vue'
-import { NButton, useMessage, useDialog, NSwitch } from 'naive-ui'
+import { NButton, useMessage, useDialog, NSwitch,FormInst, FormItemRule } from 'naive-ui'
+
+import {PWD_REGEXP} from './../../plugins/regexp.ts'
+const psdFormRef = ref<FormInst | null>(null);
+
+const checkPsdForm = (cb) => {
+  psdFormRef.value?.validate((errors) => {
+    if (errors) {
+      layerMsg.error("信息填写不完成")
+    } else {
+      cb();
+    }
+  })
+}
 
 const columns = [
   {
@@ -188,7 +207,9 @@ const disRole = reactive({
 const mpm = reactive({
   show: false,
   id: null,
-  password:""
+  password:"",
+  oldPassword:"",
+  confirmPassword:""
 })
 const props = defineProps({
   showSearch:{type:Boolean,default:true},
@@ -221,11 +242,12 @@ const editInfo = reactive({
   "role": "",
   "phone": "",
   "key": "",
-  "gender": "",
+  "gender": "unknown",
   "email": "",
   "status": "enable",
   "remarks": "",
-  "password": ""
+  "password": "",
+  "confirmPassword":""
 })
 const params = reactive({
   username: '',
@@ -307,20 +329,58 @@ function modifyPassword(row){
 function closemPM(){
   mpm.show = false;
   mpm.id = null;
+  mpm.password = '';
+  mpm.oldPassword = '';
+  mpm.confirmPassword = '';
 }
-const savePassword = async () => {
-  if(mpm.password){
-    let res = await modifyPasswordRequest(mpm.id,{password:mpm.password});
+const setPasswordRules = reactive({
+    password: { required: true,validator(rule:FormItemRule,value:string){
+      if(!value){
+        return new Error("请输入密码")
+      }else{
+        if(!PWD_REGEXP.test(value)){
+          return new Error("密码必须包含英文字母数字特殊字符")
+        }
+        if(mpm.confirmPassword && value !== mpm.confirmPassword){
+          return new Error("两次密码输入不相同")
+        }
+      } 
+      return true;
+    }, trigger: ['blur', 'input']},
+    confirmPassword:{ required: true,validator(rule:FormItemRule,value:string){
+      if(!value){
+        return new Error("请输入密码")
+      }else{
+        if(!PWD_REGEXP.test(value)){
+          return new Error("密码必须包含英文字母数字特殊字符")
+        }
+        if(mpm.password && value !== mpm.password){
+          return new Error("两次密码输入不相同")
+        }
+      } 
+      return true;
+    }, trigger: ['blur', 'input']},
+    oldPassword: { required: true,validator(rule:FormItemRule,value:string){
+      if(!value){
+        return new Error("请输入密码")
+      }else{
+        if(!PWD_REGEXP.test(value)){
+          return new Error("密码必须包含英文字母数字特殊字符")
+        }
+      } 
+      return true;
+    }, trigger: ['blur', 'input']}
+  })
+const savePassword = () => {
+  checkPsdForm(async () => {
+    let res = await modifyPasswordRequest(mpm.id,{password:mpm.password,oldpassword:mpm.oldPassword});
     if(res.code === 0){
       closemPM();
       layerMsg.success("修改密码成功");
     }else{
       layerMsg.success(res.message || "修改密码失败");
     }
-  }else{
-    layerMsg.error("请先输入新密码");
-  }
-  
+  })
 }
 function paramsDateChange(v: number) {
   params.startDate = v[0];
@@ -358,11 +418,12 @@ function clearEdit() {
   editInfo.role = "";
   editInfo.phone = "";
   editInfo.key = "";
-  editInfo.gender = "";
+  editInfo.gender = "unknown";
   editInfo.email = "";
   editInfo.status = "enable";
   editInfo.remarks = "";
   editInfo.password = "";
+  editInfo.confirmPassword = "";
   editControl.editId = null;
 }
 const editUser = async(row) => {
@@ -429,6 +490,7 @@ const addRequest = async () => {
       delete postObj[k]
     }
   }
+  delete postObj['confirmPassword'];
   let saveRespons = await addUserRequest(postObj);
   if (saveRespons.code != 0) {
     layerMsg.error(saveRespons.message || "新增失败");

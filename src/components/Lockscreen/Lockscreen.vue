@@ -9,7 +9,7 @@
     <template v-if="!showLogin">
       <div class="lock-box">
         <div class="lock">
-          <span class="lock-icon" title="解锁屏幕" @click="onLockLogin(true)">
+          <span class="lock-icon" title="解锁屏幕" @click="goLogin">
             <n-icon>
               <lock-outlined />
             </n-icon>

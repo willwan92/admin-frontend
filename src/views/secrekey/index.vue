@@ -47,16 +47,14 @@
       </n-button>
     </n-space>
 
-    <n-tabs type="line" animated>
-      <n-tab-pane name="SM2" tab="SM2密钥">
-        <BasicTable :toolbarShow=false :columns="columns" :request="loadSM2DataTable" :row-key="(row) => row.id" ref="serviceSm2Ref"
-          :actionColumn="actionColumn"></BasicTable>
-      </n-tab-pane>
-      <n-tab-pane name="SM1SM4" tab="对称密钥">
-        <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="serviceRef"
-          :actionColumn="actionColumn"></BasicTable>
-      </n-tab-pane>
+    <n-tabs type="line" animated v-model:value="tabKey">
+      <n-tab key="sm2" name="sm2">SM2密钥</n-tab>
+      <n-tab key="sm14" name="sm14">对称密钥</n-tab>
     </n-tabs>
+    <BasicTable v-if="tabKey == 'sm2'" :toolbarShow=false :columns="columns" :request="loadSM2DataTable" :row-key="(row) => row.id" ref="serviceSm2Ref"
+      :actionColumn="actionColumn"></BasicTable>
+    <BasicTable v-if="tabKey == 'sm14'" :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="serviceRef"
+      :actionColumn="actionColumn"></BasicTable>
 
     <n-modal v-model:show="secrekeyControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
       style="width:600px">
@@ -116,6 +114,7 @@ const columns = [
 
 
 const serviceRef = ref();
+const tabKey = ref('sm2');
 const serviceSm2Ref = ref();
 const secrekeyEditRef = ref();
 const layerMsg = useMessage();
@@ -131,6 +130,9 @@ const secrekeyControl = reactive({
     pageSize: 10
   }
 })
+const openKeyListByType = (type) => {
+  tabKey.value = type;
+}
 const backupRecovery = reactive({
   show:false,
   title:"密钥备份",
@@ -146,7 +148,7 @@ const params = reactive({
 });
 
 const actionColumn = reactive({
-  width: 100,
+  width: 120,
   title: '操作',
   key: 'action',
   fixed: 'right',
@@ -196,7 +198,7 @@ function closeEdit() {
   clearEdit();
 };
 function clearEdit() {
-  secrekeyInfo.keytype = "";
+  secrekeyInfo.keytype = "sm2";
   secrekeyInfo.keyindex = "";
   secrekeyInfo.keylen = "";
   secrekeyControl.secrekeyId = null;
@@ -228,7 +230,11 @@ const addRequest = async () => {
       delete postObj[k]
     }
   }
-  console.log(postObj);
+  if(postObj.keytype == 'sm2'){
+    openKeyListByType('sm2')
+  }else{
+    openKeyListByType('sm14')
+  }
   postObj['keyindex'] = parseInt(postObj['keyindex']);
   postObj['keylen']?postObj['keylen'] = parseInt(postObj['keylen']):'';
   let saveRespons = await addSecrekeyRequest(postObj);
