@@ -36,8 +36,9 @@
   
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { FormInst, useMessage } from 'naive-ui'
+import { FormInst, useMessage,FormItemRule } from 'naive-ui'
 import { initCaRequest } from "@/api/init"
+import {PWD_REGEXP} from './../../plugins/regexp.ts'
 export default defineComponent({
     emits:['go'],
     setup(props,context) {
@@ -82,10 +83,16 @@ export default defineComponent({
                     trigger: ['blur', 'change'],
                     message: '请选择证书有效期'
                 },
-                password: {
-                    required: true,
-                    trigger: ['blur', 'change'],
-                    message: '请选择CA私钥口令'
+                password: {required: true,validator(rule:FormItemRule,value:string){
+                    if(!value){
+                        return new Error("CA私钥口令")
+                    }else{
+                        if(!PWD_REGEXP.test(value)){
+                            return new Error("CA私钥口令必须包含英文字母数字特殊字符")
+                        }
+                    } 
+                    return true;
+                    }, trigger: ['blur', 'input']
                 }
             },
             generateCa(){
