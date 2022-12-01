@@ -38,7 +38,7 @@
 import { defineComponent, ref } from 'vue'
 import { FormInst, useMessage,FormItemRule } from 'naive-ui'
 import { initCaRequest } from "@/api/init"
-import {PWD_REGEXP} from './../../plugins/regexp.ts'
+import {PWD_REGEXP} from '@/plugins/regexp'
 export default defineComponent({
     emits:['go'],
     setup(props,context) {

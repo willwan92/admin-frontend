@@ -69,7 +69,7 @@
 <script lang="ts" setup>
   import {reactive,ref} from 'vue';
   import { FormInst, FormItemRule, useMessage } from 'naive-ui'
-  import {PWD_REGEXP,MOBILE_REGEXP} from './../../plugins/regexp.ts'
+  import {PWD_REGEXP,MOBILE_REGEXP} from '@/plugins/regexp'
   const formRef = ref<FormInst | null>(null);
   const layerMsg = useMessage();
   const editControl = reactive({

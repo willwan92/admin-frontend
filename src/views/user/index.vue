@@ -120,7 +120,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined,
 import userInfo from './userInfo.vue'
 import { NButton, useMessage, useDialog, NSwitch,FormInst, FormItemRule } from 'naive-ui'
 
-import {PWD_REGEXP} from './../../plugins/regexp.ts'
+import {PWD_REGEXP} from '@/plugins/regexp'
 const psdFormRef = ref<FormInst | null>(null);
 
 const checkPsdForm = (cb) => {
