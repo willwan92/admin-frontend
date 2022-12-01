@@ -33,7 +33,7 @@ const props = defineProps(['isAdd', 'serverId', 'serverInfo','ipList']);
 const checkForm = (cb) => {
     serverInfoRef.value?.validate((errors) => {
         if (errors) {
-            layerMsg.error("信息填写不完成")
+            layerMsg.error("输入信息验证未通过")
         } else {
             cb();
         }
