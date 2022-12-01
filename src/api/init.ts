@@ -43,7 +43,21 @@ export function cardLoginRequest(params) {
         }
     );
 }
-
+/**
+*
+* @description：管理卡退出登录
+*/
+export function cardLogoutRequest() {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/mngcard/logout`,
+            method: 'POST'
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
 /**
 *
 * @description：管理卡修改密码
@@ -62,19 +76,44 @@ export function editCardPasswordRequest(params) {
 }
 /**
 *
-* @description：管理卡退出登录
+* @description：管理卡算法自检
 */
-export function cardLogoutRequest() {
+export function checkCardRequest(params) {
     return http.request<BasicResponseModel>(
         {
-            url: `/mngcard/password`,
-            method: 'POST'
+            url: `/mngcard/checkcard`,
+            method: 'PATCH',
+            data: params
         },
         {
             isTransformResponse: false,
         }
     );
 }
+/**
+ *
+ * @description：获取管理卡列表
+ */
+ export function getCardList(params) {
+    let paramsStr = '';
+    for(let key in params){
+      if(params[key]){
+        paramsStr += key+'='+params[key]+'&'
+      }
+    }
+    return http.request<BasicResponseModel>(
+      {
+        url: `/mngcard?${paramsStr}`,
+        method: 'GET'
+      },
+      {
+        isTransformResponse: false,
+      }
+    );
+  }
+
+
+
 
 /**
 *

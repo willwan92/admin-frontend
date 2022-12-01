@@ -141,7 +141,9 @@ const backupRecovery = reactive({
 const secrekeyInfo = reactive({
   "keytype": "sm2",
   "keyindex": "",
-  "keylen":""
+  "keylen":"",
+  "sm2Keyindex":"",
+  "smKeyindex":""
 })
 const params = reactive({
   keyindex:""
@@ -201,6 +203,8 @@ function clearEdit() {
   secrekeyInfo.keytype = "sm2";
   secrekeyInfo.keyindex = "";
   secrekeyInfo.keylen = "";
+  secrekeyInfo.sm2Keyindex = "";
+  secrekeyInfo.smKeyindex = "";
   secrekeyControl.secrekeyId = null;
 }
 function deleteSecrekey(row) {
@@ -232,10 +236,13 @@ const addRequest = async () => {
   }
   if(postObj.keytype == 'sm2'){
     openKeyListByType('sm2')
+    postObj['keyindex'] = parseInt(postObj['sm2Keyindex']);
   }else{
     openKeyListByType('sm14')
+    postObj['keyindex'] = parseInt(postObj['smKeyindex']);
   }
-  postObj['keyindex'] = parseInt(postObj['keyindex']);
+  delete postObj['smKeyindex'];
+  delete postObj['sm2Keyindex'];
   postObj['keylen']?postObj['keylen'] = parseInt(postObj['keylen']):'';
   let saveRespons = await addSecrekeyRequest(postObj);
   if (saveRespons.code != 0) {
@@ -249,7 +256,7 @@ const addRequest = async () => {
 
 const loadSM2DataTable = async (res) => {
   let postPager = {
-    pageNo:res.page,
+    pageNo:res.pageNo,
     pageSize:res.pageSize
   }
   let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm2"} });
@@ -266,10 +273,10 @@ const loadSM2DataTable = async (res) => {
 
 const loadDataTable = async (res) => {
   let postPager = {
-    pageNo:res.page,
+    pageNo:res.pageNo,
     pageSize:res.pageSize
   }
-  let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm1"} });
+  let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm1"}});
   return new Promise((resolve) => {
     let rData = {
       list: userList.result.data,

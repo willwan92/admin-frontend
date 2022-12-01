@@ -49,7 +49,7 @@
         </div>
         <template #action>
           <n-space>
-            <n-button type="info" @click="saveEdit">确定</n-button>
+            <n-button type="info" :loading="buttonLoading" @click="saveEdit">确定</n-button>
             <n-button @click="closeEdit">取消</n-button>
           </n-space>
         </template>
@@ -93,6 +93,7 @@
       }
     }
   ];
+  const buttonLoading = ref(false);
   let ipList = ref([]);
   let getIpList = async ()=>{
       let ipListRes = await getInterfaceIpList();
@@ -152,6 +153,7 @@
     },
   });
   function saveEdit() {
+    buttonLoading.value = true;
     serverEditRef.value.checkForm(function(){
       addRequest();
     })
@@ -202,6 +204,7 @@
     postObj['port'] = parseInt(postObj['port']);
     postObj['type'] = parseInt(postObj['type']);
     let saveRespons = await addServerRequest(postObj);
+    buttonLoading.value = false;
     if (saveRespons.code != 0) {
       layerMsg.error(saveRespons.message || "新增失败");
     } else {
