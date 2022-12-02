@@ -25,10 +25,6 @@
     <n-card :bordered="false" class="proCard">
       <n-form ref="searchRef" :model="params" inline label-placement="left"
         require-mark-placement="right-hanging">
-        <!-- <n-form-item label="类型" path="type">
-            <n-select style="width:120px" v-model:value="params.type" placeholder="类型"
-            :options="whitelistControl.typeOptions" />
-        </n-form-item> -->
         <n-form-item style="width:220px" label="版本" path="version">
           <n-input v-model:value="params.version" placeholder="请输入版本号" />
         </n-form-item>
