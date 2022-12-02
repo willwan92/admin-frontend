@@ -26,10 +26,12 @@
     {
       title: '时间',
       key: 'date',
+      width: '160',
     },
     {
       title: '日志类型',
       key: 'type',
+      width: '90',
       render(row) {
         return h('span', LogTypeOptions[row.type].label);
       },
@@ -37,14 +39,17 @@
     {
       title: '管理员名称',
       key: 'user',
+      width: '100',
     },
     {
       title: '客户端IP',
       key: 'sip',
+      width: '150',
     },
     {
       title: '日志级别',
       key: 'pri',
+      width: '85',
       render(row) {
         return h('span', LogPriOptions[row.pri].label);
       },
@@ -69,7 +74,10 @@
     });
     return new Promise((resolve) => {
       let rData = {
-        list: result.data,
+        list: result.data.map((item) => {
+          item.date = formatToDateTime(new Date(item.date), 'yyyy/MM/dd HH:mm:ss');
+          return item;
+        }),
         page: parseInt(result.pageNo),
         pageCount: parseInt(result.total / result.pageSize + 1),
         pageSize: parseInt(result.pageSize),
