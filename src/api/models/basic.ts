@@ -7,7 +7,7 @@ export interface PageResponse<T = any> {
   pageNo: number;
   pageSize: number;
   total: number;
-  data: T;
+  data: T[];
 }
 
 export interface BasicResponse<T = any> {

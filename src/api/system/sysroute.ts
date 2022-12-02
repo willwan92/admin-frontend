@@ -17,7 +17,7 @@ export function getSysrouteList(params: QuerySysrouteReq) {
 
 export function addSysroute(data: Omit<SysrouteModel, 'id'>) {
   return http.request<BasicResponse>({
-    url: 'sysroutes',
+    url: '/sysroutes',
     method: 'POST',
     data,
   });
