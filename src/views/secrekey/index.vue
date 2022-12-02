@@ -219,7 +219,7 @@ function deleteSecrekey(row) {
   })
 }
 const deleteRequest = async (id,keytype) => {
-  let deleteRespons = await deleteSecrekeyRequest(id,{keytype:keytype});
+  let deleteRespons = await deleteSecrekeyRequest(id,{keytype:keytype == 'sm2'?'sm2':'sm1'});
   if (deleteRespons.code != 0) {
     layerMsg.error(deleteRespons.message || "新增失败");
   } else {

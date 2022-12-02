@@ -274,7 +274,7 @@
     whitelistInfo.comment = row.comment;
     whitelistInfo.ip = row.ip;
     whitelistInfo.type = row.type+'';
-    whitelistInfo.port = row.port;
+    whitelistInfo.port = row.port+'';
     whitelistInfo.protocol = row.protocol;
 
     whitelistControl.whitelistId = row.id;
