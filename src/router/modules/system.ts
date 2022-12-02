@@ -36,6 +36,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/ifaddr/index.vue'),
       },
       {
+        path: 'mngcard',
+        name: 'system_mngcard',
+        meta: {
+          title: '管理卡管理',
+          activeMenu: 'system_mngcard',
+        },
+        component: () => import('@/views/mngcard/index.vue'),
+      },
+      {
         path: 'sysroute',
         name: 'system_sysroute',
         meta: {

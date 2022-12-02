@@ -20,7 +20,7 @@
 import { defineComponent, ref } from 'vue'
 import { FormInst, useMessage,FormItemRule } from 'naive-ui'
 import { addCardRequest } from "@/api/init"
-import {MOBILE_REGEXP} from '@/plugins/regexp.ts'
+import {MOBILE_REGEXP} from '@/plugins/regexp'
 
 export default defineComponent({
     emits:['go'],
