@@ -10,8 +10,8 @@
     <div class="init-big-step">
       <div v-for="(nav,index) in bigStepArr" @click="bigStepGo(index)" :class="['init-step-title',currentStepNum==index?'active':'']">{{nav.title}}</div>
     </div>
-    <div class="init-small-steps">
-      <initcard v-if="currentStepNum == 0" @go="nextBigStep"  />
+    <div class="init-small-steps" v-if="initShow">
+      <initcard v-if="currentStepNum == 0" :p="currentProgress" @go="nextBigStep"  />
       <!-- <n-space justify="center" v-if="currentStepNum == 1" :style="{'margin-top':'30px'}">
         <n-button type="info" @click="generateSecretKey">生成设备密钥</n-button>
       </n-space> -->
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref,onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/modules/user';
 import { useDialog, useMessage } from 'naive-ui';
 import { useRouter, useRoute } from 'vue-router';
@@ -30,7 +30,8 @@ import { TABS_ROUTES } from '@/store/mutation-types';
 import initcard from '@/views/init/initCard/index.vue'
 import initCa from '@/views/init/initCa/index.vue'
 import initThreeUser from '@/views/init/initThreeUser/index.vue'
-import { initSecretKeyRequest } from "@/api/init"
+import { initSecretKeyRequest,getInitProgressRequest } from "@/api/init"
+const initShow = ref(false);
 const currentStepNum = ref(0);
 const dialog = useDialog();
 const message = useMessage();
@@ -38,11 +39,46 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const bigStepArr = ref([
-  {title:"管理卡初始化"},
+  {title:"管理卡初始化",progressArr:[
+    "addcard1",
+    "addcard2",
+    "addcard3",
+    "addcard4",
+    "addcard5",
+    "addcard6",
+    "logincard1",
+    "logincard2",
+    "logincard3",
+    "logincard4",
+    "logincard5",
+    "logincard6",
+  ]},
   // {title:"设备密钥初始化"},
-  {title:"证书初始化"},
-  {title:"三员初始化"}
+  {title:"证书初始化",progressArr:["cainit"]},
+  {title:"三员初始化",progressArr:["mnginit"]}
 ])
+const currentProgress = ref("");
+const getInitProgress = async () => {
+  let res = await getInitProgressRequest();
+  if(res.code === 0){
+    currentProgress.value = res.result.progress;
+    let resBigIndex;
+    resBigIndex = bigStepArr.value.findIndex((item) => {
+      let cstep = item.progressArr.find((p) => {
+        return p === currentProgress.value;
+      })
+      if(cstep){
+        return true
+      }else{
+        return false;
+      }
+    })
+    bigStepGo(resBigIndex);
+  }else{
+    message.error('获取初始化进度失败');
+  }
+  initShow.value = true;
+}
 const generateSecretKey = async () => {
   let skRes = await initSecretKeyRequest();
   if(skRes.code === 0){
@@ -73,10 +109,7 @@ const doLogout = () => {
         localStorage.removeItem(TABS_ROUTES);
         router
           .replace({
-            name: 'Login',
-            // query: {
-            //   redirect: route.fullPath,
-            // },
+            name: 'Login'
           })
           .finally(() => location.reload());
       });
@@ -84,6 +117,9 @@ const doLogout = () => {
     onNegativeClick: () => { },
   });
 };
+onBeforeMount(() => {
+    getInitProgress();
+  })
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
 <template>
     <n-card :bordered="false" class="proCard">
-      <n-form v-if="showSearch" ref="searchRef" :model="params" inline label-placement="left"
+      <n-form ref="searchRef" :model="params" inline label-placement="left"
         require-mark-placement="right-hanging">
         <n-form-item style="width:210px" label="管理卡名" path="name">
           <n-input v-model:value="params.name" placeholder="请输入管理卡名" />
@@ -129,27 +129,17 @@
   
   
   const usersRef = ref();
-  const editRef = ref();
   const layerMsg = useMessage();
-  const layerDialog = useDialog();
   const mpm = reactive({
     show: false,
-    id: null,
     password:"",
     oldPassword:"",
-    confirmPassword:""
+    confirmPassword:"",
+    serial:""
   })
   const props = defineProps({
-    showSearch:{type:Boolean,default:true},
     showPager:{type:Boolean,default:true}
   });
-  function tTN(num){
-    if(num<10){
-      return '0'+num;
-    }else{
-      return num;
-    }
-  }
   const editControl = reactive({
     typeOptions: [{ label: "请选择类型", value: "" }, { label: "管理卡", value: "admin" }, { label: "操作卡", value: "operator" }],
     editId: null,
@@ -189,14 +179,14 @@
   });
   function modifyPassword(row){
     mpm.show = true;
-    mpm.id = row.id;
+    mpm.serial = row.keyser;
   }
   function closemPM(){
     mpm.show = false;
-    mpm.id = null;
     mpm.password = '';
     mpm.oldPassword = '';
     mpm.confirmPassword = '';
+    mpm.serial = "";
   }
   const setPasswordRules = reactive({
       password: { required: true,validator(rule:FormItemRule,value:string){
@@ -238,7 +228,7 @@
     })
   const savePassword = () => {
     checkPsdForm(async () => {
-      let res = await editCardPasswordRequest({newPassword:mpm.password,oldPassword:mpm.oldPassword});
+      let res = await editCardPasswordRequest({serial:mpm.serial,newPassword:mpm.password,oldPassword:mpm.oldPassword});
       if(res.code === 0){
         closemPM();
         layerMsg.success("修改密码成功");

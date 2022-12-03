@@ -67,11 +67,11 @@
         { title: '管理卡2登录',cardNum:"2" },
         { title: '管理卡3登录',cardNum:"3" },
         { title: '选择备份类型' },
-        { title: '管理卡3备份',cardNum:"3" },
-        { title: '管理卡4备份',cardNum:"4" },
-        { title: '管理卡5备份',cardNum:"5" },
-        { title: '管理卡1备份',cardNum:"1" },
-        { title: '管理卡2备份',cardNum:"2" },
+        { title: '管理卡3备份',cardNum:"1" },
+        { title: '管理卡4备份',cardNum:"2" },
+        { title: '管理卡5备份',cardNum:"3" },
+        { title: '管理卡1备份',cardNum:"4" },
+        { title: '管理卡2备份',cardNum:"5" },
         { title: '备份完成'}
     ]);
     const params = reactive({
@@ -155,7 +155,7 @@
         loginShow.value = false;
         typeShow.value = true;
         backupsShow.value = false;
-        params.password = '';
+        params.password = '12345678';
         downloadShow.value = false;
       }else if(nv === 11){
         loginShow.value = false;

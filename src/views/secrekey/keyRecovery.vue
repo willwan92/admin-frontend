@@ -8,9 +8,6 @@
             <div class="key-recovery-item" v-for="item in 7">
               <div v-if="item == current">
                 <n-form v-if="loginShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
-                  <!-- <n-form-item label="管理卡号" path="cardNum">
-                      <n-input v-model:value="params.cardNum" placeholder="输入管理卡号" />
-                  </n-form-item> -->
                   <n-form-item label="PIN码" path="password">
                       <n-input v-model:value="params.password" placeholder="输入PIN码" />
                   </n-form-item>
@@ -31,9 +28,6 @@
                 </n-upload>
 
                 <n-form v-if="recoveryShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
-                  <!-- <n-form-item label="管理卡号" path="cardNum">
-                      <n-input v-model:value="params.cardNum" placeholder="输入管理卡号" />
-                  </n-form-item> -->
                   <n-form-item label="PIN码" path="password">
                       <n-input v-model:value="params.password" placeholder="输入PIN码" />
                   </n-form-item>
@@ -60,10 +54,10 @@
         { title: '管理卡1登录',cardNum:"1" },
         { title: '管理卡2登录',cardNum:"2" },
         { title: '管理卡3登录',cardNum:"3" },
-        { title: '恢复初始化' },
-        { title: '管理卡3恢复',cardNum:"3" },
-        { title: '管理卡1恢复',cardNum:"1" },
-        { title: '管理卡2恢复',cardNum:"2" }
+        { title: '恢复密钥初始化' },
+        { title: '管理卡3恢复',cardNum:"1" },
+        { title: '管理卡1恢复',cardNum:"2" },
+        { title: '管理卡2恢复',cardNum:"3" }
     ]);
     const currentCard = ref<any>('1');
     const params = reactive({
@@ -71,8 +65,6 @@
       password:"",
       type:"ecc"
     })
-    const eccType = ref('info');
-    const allType = ref('');
     const reqLoading = ref(false);
     const beforeUpload = () => {
       reqLoading.value = true;
@@ -81,7 +73,7 @@
       keyRecovery();
     }
     const uploadError = () => {
-      layerMsg.error("上传失败");
+      layerMsg.error("文件上传失败");
       reqLoading.value = false;
     }
     const cardLogin = async () => {
@@ -102,9 +94,9 @@
       let recoveryRes = await keyRecoveryRequest()
       if(recoveryRes.code == 0){
         current.value = current.value + 1;
-        layerMsg.success("密钥恢复成功")
+        layerMsg.success("上传文件成功")
       }else{
-        layerMsg.error("密钥恢复失败")
+        layerMsg.error("上传文件失败")
       }
       reqLoading.value = false;
     }

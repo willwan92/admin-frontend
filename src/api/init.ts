@@ -147,3 +147,33 @@ export function initCaRequest(params) {
         }
     );
 }
+/**
+*
+* @description：获取证书信息
+*/
+export function getCaInfoRequest() {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/cacert/show`,
+            method: 'get'
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+*
+* @description：获取证书信息
+*/
+export function getInitProgressRequest() {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/initprogress`,
+            method: 'get'
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
