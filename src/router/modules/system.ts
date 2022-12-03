@@ -45,6 +45,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/mngcard/index.vue'),
       },
       {
+        path: 'time',
+        name: 'system_time',
+        meta: {
+          title: '时间管理',
+          activeMenu: 'system_time',
+        },
+        component: () => import('@/views/system/time/index.vue'),
+      },
+      {
         path: 'sysroute',
         name: 'system_sysroute',
         meta: {
