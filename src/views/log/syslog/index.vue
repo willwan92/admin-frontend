@@ -75,7 +75,10 @@
     return new Promise((resolve) => {
       let rData = {
         list: result.data.map((item) => {
-          item.date = formatToDateTime(new Date(item.date), 'yyyy/MM/dd HH:mm:ss');
+          item.date = formatToDateTime(
+            new Date(item.date).getTime() - hours,
+            'yyyy/MM/dd HH:mm:ss'
+          );
           return item;
         }),
         page: parseInt(result.pageNo),
