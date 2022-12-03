@@ -127,6 +127,7 @@
         loginShow.value = true;
         uploadShow.value = false;
         recoveryShow.value = false;
+        currentCard.value = stepsArr.value[nv-1].cardNum?stepsArr.value[nv-1].cardNum:"0"
       }else if(nv === 4){
         loginShow.value = false;
         uploadShow.value = true;

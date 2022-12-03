@@ -168,6 +168,7 @@
         typeShow.value = false;
         backupsShow.value = true;
         downloadShow.value = false;
+        currentCard.value = stepsArr.value[nv-1].cardNum ? stepsArr.value[nv-1].cardNum : "0"
       }
     })
     const clearParams = () => {
