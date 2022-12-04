@@ -24,6 +24,9 @@
                         <n-button :type="eccType" @click="keyTypeClick('ecc')">
                             非对称密钥
                         </n-button>
+                        <n-button :type="symType" @click="keyTypeClick('sym')">
+                            对称密钥
+                        </n-button>
                         <n-button :type="allType" @click="keyTypeClick('all')">
                             全部密钥
                         </n-button>
@@ -81,6 +84,7 @@
     })
     const eccType = ref('info');
     const allType = ref('');
+    const symType = ref('');
     const reqLoading = ref(false);
     const currentCard = ref<any>('1');
     const cardLogin = async () => {
@@ -133,9 +137,15 @@
       if(t === 'ecc'){
         eccType.value = 'info'
         allType.value = ''
-      }else{
+        symType.value = ''
+      }else if(t == 'all'){
         eccType.value = ''
         allType.value = 'info'
+        symType.value = ''
+      }else if(t == 'sym'){
+        eccType.value = ''
+        allType.value = ''
+        symType.value = 'info'
       }
       params.type = t;
     }
@@ -157,7 +167,7 @@
         backupsShow.value = false;
         params.password = '12345678';
         downloadShow.value = false;
-      }else if(nv === 11){
+      }else if(nv === 10){
         loginShow.value = false;
         typeShow.value = false;
         backupsShow.value = false;

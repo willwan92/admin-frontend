@@ -9,7 +9,7 @@
               <div v-if="item == current">
                 <n-form v-if="loginShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
                   <n-form-item label="PIN码" path="password">
-                      <n-input v-model:value="params.password" placeholder="输入PIN码" />
+                      <n-input type="password" v-model:value="params.password" placeholder="输入PIN码" />
                   </n-form-item>
                   <n-space justify="center">
                     <n-button type="info" @click="cardLogin">登录</n-button>
@@ -29,7 +29,7 @@
 
                 <n-form v-if="recoveryShow" label-placement="left" label-width="auto" :model="params" size="medium" style="width:100%">
                   <n-form-item label="PIN码" path="password">
-                      <n-input v-model:value="params.password" placeholder="输入PIN码" />
+                      <n-input type="password" v-model:value="params.password" placeholder="输入PIN码" />
                   </n-form-item>
                   <n-space justify="center">
                     <n-button type="info" @click="cardRecovery">恢复</n-button>
