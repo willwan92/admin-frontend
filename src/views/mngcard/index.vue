@@ -214,16 +214,6 @@
           }
         } 
         return true;
-      }, trigger: ['blur', 'input']},
-      oldPassword: { required: true,validator(rule:FormItemRule,value:string){
-        if(!value){
-          return new Error("请输入密码")
-        }else{
-          if(!PWD_REGEXP.test(value)){
-            return new Error("密码必须包含英文字母数字特殊字符")
-          }
-        } 
-        return true;
       }, trigger: ['blur', 'input']}
     })
   const savePassword = () => {
