@@ -141,10 +141,9 @@
     period: 60,
   });
   TimeApi.getTimeServerConf().then(({ result }) => {
-    const conf = result.data[0];
-    clockServerForm.start = conf.start;
-    clockServerForm.server = conf.server;
-    clockServerForm.period = conf.period;
+    clockServerForm.start = result.start;
+    clockServerForm.server = result.server;
+    clockServerForm.period = result.period;
   });
 
   const clockServerConfRules: FormRules = {

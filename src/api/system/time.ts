@@ -23,7 +23,7 @@ export function setSysTime(data: TimeModel.SetSysTimeReq) {
 }
 
 export function getTimeServerConf() {
-  return http.request<BasicResponse<any>>(
+  return http.request<BasicResponse<TimeModel.TimeServerConf>>(
     {
       url: '/timer/clock',
       method: 'GET',
