@@ -16,7 +16,7 @@ export interface BasicPageParams {
  *
  * @description：获取密钥列表
  */
-export function getSecrekeyList(params) {
+export function getSecretkeyList(params) {
   let paramsStr = '';
   for(let key in params){
     if(params[key]){
@@ -37,7 +37,7 @@ export function getSecrekeyList(params) {
  *
  * @description：新增密钥
  */
- export function addSecrekeyRequest(params) {
+ export function addSecretkeyRequest(params) {
   return http.request<BasicResponseModel>(
     {
       url: `/keys`,
@@ -53,7 +53,7 @@ export function getSecrekeyList(params) {
  *
  * @description：删除密钥
  */
- export function deleteSecrekeyRequest(id,params) {
+ export function deleteSecretkeyRequest(id,params) {
   return http.request<BasicResponseModel>(
     {
       url: `/keys/${id}`,

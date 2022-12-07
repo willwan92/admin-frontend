@@ -19,11 +19,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'log',
     component: Layout,
     meta: {
-      sort: 19,
+      sort: 10,
       isRoot: true,
       title: '',
       activeMenu: 'syslog',
       icon: renderIcon(UnorderedListOutlined),
+      showIn:['audit']
     },
     children: [
       {
@@ -32,6 +33,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '系统日志',
           activeMenu: 'syslog',
+          showIn:['audit']
         },
         component: () => import('@/views/log/syslog/index.vue'),
       },

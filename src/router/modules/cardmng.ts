@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { HomeFilled } from '@vicons/antd';
+import { IdcardTwotone } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -15,30 +15,30 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
-    name: 'home',
+    path: '/cardmng',
+    name: 'cardmng',
     component: Layout,
     meta: {
-      sort: 1,
+      sort: 5,
       isRoot: true,
-      title:"系统首页",
-      activeMenu: 'home_index',
-      icon: renderIcon(HomeFilled),
-      showIn:['system','business','audit']
+      title: '管理卡管理',
+      activeMenu: 'system_mngcard',
+      icon: renderIcon(IdcardTwotone),
+      showIn:['business']
     },
     children: [
-      {
-        path: 'index',
-        name: `home_index`,
-        meta: {
-          title: '系统首页',
-          activeMenu: 'home_index',
-          showIn:['system','business','audit']
-        },
-        component: () => import('@/views/home/index.vue'),
-      }
+        {
+            path: 'mngcard',
+            name: 'system_mngcard',
+            meta: {
+              title: '管理卡管理',
+              activeMenu: 'system_mngcard',
+              showIn:['business']
+            },
+            component: () => import('@/views/mngcard/index.vue'),
+          },
     ],
-  }
+  },
 ];
 
 export default routes;

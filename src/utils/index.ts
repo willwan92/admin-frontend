@@ -4,6 +4,7 @@ import { NIcon, NTag } from 'naive-ui';
 import { PageEnum } from '@/enums/pageEnum';
 import { isObject } from './is/index';
 import { cloneDeep } from 'lodash-es';
+import { useUserStore } from '@/store/modules/user';
 /**
  * render 图标
  * */
@@ -33,6 +34,8 @@ export function renderNew(type = 'warning', text = 'New', color: object = newTag
  * 递归组装菜单格式
  */
 export function generatorMenu(routerMap: Array<any>) {
+  const userStore = useUserStore();
+  const userInfo: object = userStore.getUserInfo || {};
   return filterRouter(routerMap).map((item) => {
     const isRoot = isRootRouter(item);
     const info = isRoot ? item.children[0] : item;

@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@vicons/antd": "^0.10.0",
+    "@vicons/carbon": "^0.12.0",
     "@vicons/fa": "^0.12.0",
     "@vicons/ionicons4": "^0.12.0",
     "@vicons/ionicons5": "^0.10.0",

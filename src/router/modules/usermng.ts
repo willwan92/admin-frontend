@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { MacCommandOutlined } from '@vicons/antd';
+import { UserOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -15,26 +15,28 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/devmng',
-    name: 'devmng',
+    path: '/usermng',
+    name: 'usermng',
     component: Layout,
     meta: {
-      sort: 12,
+      sort: 3,
       isRoot: true,
-      title: '',
-      activeMenu: 'devmng_index',
-      icon: renderIcon(MacCommandOutlined),
+      title: '用户管理',
+      activeMenu: 'system_user',
+      icon: renderIcon(UserOutlined),
+      showIn:['system']
     },
     children: [
-      {
-        path: 'index',
-        name: `devmng_index`,
+        {
+        path: 'user',
+        name: `system_user`,
         meta: {
-          title: '设备管理',
-          activeMenu: 'devmng_index',
+            title: '用户管理',
+            activeMenu: 'system_user',
+            showIn:['system']
         },
-        component: () => import('@/views/devmng/index.vue'),
-      },
+        component: () => import('@/views/user/index.vue'),
+        },
     ],
   },
 ];

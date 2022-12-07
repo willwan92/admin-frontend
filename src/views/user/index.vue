@@ -119,10 +119,10 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined,
   SearchOutlined, ReloadOutlined } from '@vicons/antd'
 import userInfo from './userInfo.vue'
 import { NButton, useMessage, useDialog, NSwitch,FormInst, FormItemRule } from 'naive-ui'
-
+import { useUserStore } from '@/store/modules/user';
 import {PWD_REGEXP} from '@/plugins/regexp'
 const psdFormRef = ref<FormInst | null>(null);
-
+const userStore = useUserStore();
 const checkPsdForm = (cb) => {
   psdFormRef.value?.validate((errors) => {
     if (errors) {
@@ -475,6 +475,14 @@ const saveRole = async () => {
     layerMsg.success('分配角色成功');
     reloadTable();
     closeRole();
+    const userInfo = userStore.getUserInfo;
+    if(userInfo.id === disRole.id){
+      if(window.location.href.indexOf('?')<0){
+        window.location.href = window.location.href+'?t='+new Date().getTime();
+      }else{
+        window.location.href =  window.location.href.split('?')[0];
+      }
+    }
   }
 }
 function closeRole() {

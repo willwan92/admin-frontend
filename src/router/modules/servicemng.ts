@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { UpgradeFilled } from '@vicons/material';
+import { BareMetalServer } from '@vicons/carbon';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -15,26 +15,28 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/upgrade',
-    name: 'upgrade',
+    path: '/servicemng',
+    name: 'servicemng',
     component: Layout,
     meta: {
-      sort: 19,
+      sort: 6,
       isRoot: true,
-      title: '',
-      activeMenu: 'sysupgrade',
-      icon: renderIcon(UpgradeFilled),
+      title: '服务管理',
+      activeMenu: 'system_server',
+      icon: renderIcon(BareMetalServer),
+      showIn:['business']
     },
     children: [
-      {
-        path: 'sysupgrade',
-        name: 'sysupgrade',
-        meta: {
-          title: '系统升级',
-          activeMenu: 'sysupgrade',
-        },
-        component: () => import('@/views/upgrade/index.vue'),
-      },
+        {
+            path: 'server',
+            name: `system_server`,
+            meta: {
+              title: '服务管理',
+              activeMenu: 'system_server',
+              showIn:['business']
+            },
+            component: () => import('@/views/server/index.vue'),
+          },
     ],
   },
 ];

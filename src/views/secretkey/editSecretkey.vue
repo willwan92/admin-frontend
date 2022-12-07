@@ -1,5 +1,5 @@
 <template>
-    <n-form ref="secrekeyInfoRef" label-placement="left" label-width="auto" :model="secrekeyInfo" :rules="rules" size="medium"
+    <n-form ref="secretkeyInfoRef" label-placement="left" label-width="auto" :model="secretkeyInfo" :rules="rules" size="medium"
         style="width:100%">
         <n-form-item label="密钥类型" path="keytype">
             <n-button-group>
@@ -12,10 +12,10 @@
             </n-button-group>
         </n-form-item>
         <n-form-item label="密钥索引" path="sm2Keyindex" v-if="smType!='info'">
-            <n-input v-model:value="secrekeyInfo.sm2Keyindex" placeholder="输入密钥索引" />
+            <n-input v-model:value="secretkeyInfo.sm2Keyindex" placeholder="输入密钥索引" />
         </n-form-item>
         <n-form-item label="密钥索引" path="smKeyindex" v-if="smType=='info'">
-            <n-input v-model:value="secrekeyInfo.smKeyindex" placeholder="输入密钥索引" />
+            <n-input v-model:value="secretkeyInfo.smKeyindex" placeholder="输入密钥索引" />
         </n-form-item>
         <n-form-item label="算法标识" path="keytype" v-if="smType=='info'">
             <n-button-group>
@@ -28,7 +28,7 @@
             </n-button-group>
         </n-form-item>
         <n-form-item label="密钥长度" path="keylen" v-if="smType=='info'">
-            <n-select v-model:value="secrekeyInfo.keylen" placeholder="选择密钥长度" :options="secrekeyControl.keylenOptions" />
+            <n-select v-model:value="secretkeyInfo.keylen" placeholder="选择密钥长度" :options="secretkeyControl.keylenOptions" />
         </n-form-item>
     </n-form>
 </template>
@@ -36,9 +36,9 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import { FormInst, useMessage,FormItemRule } from 'naive-ui'
-const secrekeyInfoRef = ref<FormInst | null>(null);
+const secretkeyInfoRef = ref<FormInst | null>(null);
 const layerMsg = useMessage();
-const secrekeyControl = reactive({
+const secretkeyControl = reactive({
     keylenOptions:[{ label: "选择密钥长度", value:""}, { label: "16", value:"16"}, { label: "32", value: "32" }]
 })
 const sm2Type = ref('info');
@@ -68,9 +68,9 @@ const rules = reactive({
       return true;
     }, trigger: ['blur', 'input'] }
 })
-const props = defineProps(['isAdd', 'secrekeyId', 'secrekeyInfo']);
+const props = defineProps(['isAdd', 'secretkeyId', 'secretkeyInfo']);
 const checkForm = (cb) => {
-    secrekeyInfoRef.value?.validate((errors) => {
+    secretkeyInfoRef.value?.validate((errors) => {
         if (errors) {
             layerMsg.error("输入信息验证未通过")
         } else {
@@ -82,21 +82,21 @@ const smClick = (t) => {
     if(t == 'sm'){
         sm2Type.value = '';
         smType.value = 'info';
-        props['secrekeyInfo'].keytype = 'sm1';
-        props['secrekeyInfo'].keyindex = '';
+        props['secretkeyInfo'].keytype = 'sm1';
+        props['secretkeyInfo'].keyindex = '';
     }else if(t == 'sm2'){
         sm2Type.value = 'info';
         smType.value = '';
-        props['secrekeyInfo'].keytype = 'sm2';
-        props['secrekeyInfo'].keyindex = '';
+        props['secretkeyInfo'].keytype = 'sm2';
+        props['secretkeyInfo'].keyindex = '';
     }else if(t == 'sm1'){
         sm1Type.value = 'info';
         sm4Type.value = '';
-        props['secrekeyInfo'].keytype = 'sm1';
+        props['secretkeyInfo'].keytype = 'sm1';
     }else if(t == 'sm4'){
         sm1Type.value = '';
         sm4Type.value = 'info';
-        props['secrekeyInfo'].keytype = 'sm4';
+        props['secretkeyInfo'].keytype = 'sm4';
     }
 }
 defineExpose({

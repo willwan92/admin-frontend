@@ -60,7 +60,7 @@
 <script lang="ts" setup>
     import { ref,defineEmits,reactive,watch } from 'vue';
     import { StepsProps,useMessage } from 'naive-ui';
-    import {cardLoginRequest,backupTypeRequest,cardBackupRequest} from '@/api/system/secrekey'
+    import {cardLoginRequest,backupTypeRequest,cardBackupRequest} from '@/api/system/secretkey'
     const emits = defineEmits(['closeModal']);
     const currentStatus = ref<StepsProps['status']>('process');
     const layerMsg = useMessage();

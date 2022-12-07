@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { HomeFilled } from '@vicons/antd';
+import { VirtualColumnKey } from '@vicons/carbon';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -15,30 +15,30 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
-    name: 'home',
+    path: '/sercetkeymng',
+    name: 'sercetkeymng',
     component: Layout,
     meta: {
-      sort: 1,
+      sort: 8,
       isRoot: true,
-      title:"系统首页",
-      activeMenu: 'home_index',
-      icon: renderIcon(HomeFilled),
-      showIn:['system','business','audit']
+      title: '密钥管理',
+      activeMenu: 'system_secretkey',
+      icon: renderIcon(VirtualColumnKey),
+      showIn:['business',]
     },
     children: [
       {
-        path: 'index',
-        name: `home_index`,
+        path: 'secretkey',
+        name: `system_secretkey`,
         meta: {
-          title: '系统首页',
-          activeMenu: 'home_index',
-          showIn:['system','business','audit']
+          title: '密钥管理',
+          activeMenu: 'system_secretkey',
+          showIn:['business',]
         },
-        component: () => import('@/views/home/index.vue'),
-      }
+        component: () => import('@/views/secretkey/index.vue'),
+      },
     ],
-  }
+  },
 ];
 
 export default routes;

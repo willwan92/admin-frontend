@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { UserOutlined } from '@vicons/antd';
+import { SettingOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -19,75 +19,23 @@ const routes: Array<RouteRecordRaw> = [
     name: 'system',
     component: Layout,
     meta: {
-      sort: 10,
+      sort: 4,
       isRoot: true,
       title: '系统管理',
       activeMenu: 'system_user',
-      icon: renderIcon(UserOutlined),
+      icon: renderIcon(SettingOutlined),
+      showIn:['system']
     },
     children: [
-      {
-        path: 'ifaddr',
-        name: 'system_ifaddr',
-        meta: {
-          title: '接口IP',
-          activeMenu: 'system_ifaddr',
-        },
-        component: () => import('@/views/system/ifaddr/index.vue'),
-      },
-      {
-        path: 'mngcard',
-        name: 'system_mngcard',
-        meta: {
-          title: '管理卡管理',
-          activeMenu: 'system_mngcard',
-        },
-        component: () => import('@/views/mngcard/index.vue'),
-      },
       {
         path: 'time',
         name: 'system_time',
         meta: {
           title: '时间管理',
           activeMenu: 'system_time',
+          showIn:['system']
         },
         component: () => import('@/views/system/time/index.vue'),
-      },
-      {
-        path: 'sysroute',
-        name: 'system_sysroute',
-        meta: {
-          title: '系统路由',
-          activeMenu: 'system_sysroute',
-        },
-        component: () => import('@/views/system/sysroute/index.vue'),
-      },
-      {
-        path: 'user',
-        name: `system_user`,
-        meta: {
-          title: '用户管理',
-          activeMenu: 'system_user',
-        },
-        component: () => import('@/views/user/index.vue'),
-      },
-      {
-        path: 'server',
-        name: `system_server`,
-        meta: {
-          title: '服务管理',
-          activeMenu: 'system_server',
-        },
-        component: () => import('@/views/server/index.vue'),
-      },
-      {
-        path: 'secrekey',
-        name: `system_secrekey`,
-        meta: {
-          title: '密钥管理',
-          activeMenu: 'system_secrekey',
-        },
-        component: () => import('@/views/secrekey/index.vue'),
       },
       {
         path: 'adminip',
@@ -95,17 +43,29 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '管理主机',
           activeMenu: 'system_adminip',
+          showIn:['system']
         },
         component: () => import('@/views/adminip/index.vue'),
       },
       {
-        path: 'whitelist',
-        name: `system_whitelist`,
+        path: 'index',
+        name: `devmng_index`,
         meta: {
-          title: '白名单管理',
-          activeMenu: 'system_whitelist',
+          title: '设备管理',
+          activeMenu: 'devmng_index',
+          showIn:['system']
         },
-        component: () => import('@/views/whitelist/index.vue'),
+        component: () => import('@/views/devmng/index.vue'),
+      },
+      {
+        path: 'sysupgrade',
+        name: 'sysupgrade',
+        meta: {
+          title: '系统升级',
+          activeMenu: 'sysupgrade',
+          showIn:['system']
+        },
+        component: () => import('@/views/upgrade/index.vue'),
       },
     ],
   },

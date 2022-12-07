@@ -105,6 +105,11 @@ export const useAsyncRouteStore = defineStore({
       const hasPermission = (route) => {
         const { meta } = route;
         const { permissions } = meta || {};
+        if(meta.showIn.indexOf(userInfo.role) < 0){
+          return false;
+        }else{
+          return true;
+        }
         if (!permissions) return true;
         return permissionsList.some((item) => permissions.includes(item.value));
       };

@@ -19,11 +19,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'rootca',
     component: Layout,
     meta: {
-      sort: 19,
+      sort: 9,
       isRoot: true,
-      title: '',
+      title: '证书管理',
       activeMenu: 'sysrootca',
       icon: renderIcon(SafetyCertificateOutlined),
+      showIn:['business']
     },
     children: [
       {
@@ -32,6 +33,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '根证书',
           activeMenu: 'sysrootca',
+          showIn:['business']
         },
         component: () => import('@/views/rootca/index.vue'),
       },

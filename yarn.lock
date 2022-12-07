@@ -1556,6 +1556,11 @@
   resolved "https://registry.yarnpkg.com/@vicons/antd/-/antd-0.10.0.tgz#17661ed654122a6450926f40ceba9fd67ae2e036"
   integrity sha512-F+pVt2cYJDoJw5Wvu5YzvqnpCoUPeYh272R/ZVK+2H6U/G0LCDvEWNQHXkbLBpCtu9FAq/yac0NNfg1i0a1DGg==
 
+"@vicons/carbon@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmmirror.com/@vicons/carbon/-/carbon-0.12.0.tgz#dfcc5d6283662eccee55700b2d5c29e688a70f5a"
+  integrity sha512-kCOgr/ZOhZzoiFLJ8pwxMa2TMxrkCUOA22qExPabus35F4+USqzcsxaPoYtqRd9ROOYiHrSqwapak/ywF0D9bg==
+
 "@vicons/fa@^0.12.0":
   version "0.12.0"
   resolved "https://registry.npmmirror.com/@vicons/fa/-/fa-0.12.0.tgz#a5f92db45990f8a47b5eeedcdb9b673f0dababc8"

@@ -24,21 +24,21 @@
     </n-form>
 
     <n-space>
-      <n-button type="info" ghost @click="addSecrekey">生产密钥
+      <n-button type="info" ghost @click="addSecretkey">生产密钥
         <template #icon>
           <n-icon>
             <PlusOutlined />
           </n-icon>
         </template>
       </n-button>
-      <n-button type="warning" ghost @click="secrekeyBackups">密钥备份
+      <n-button type="warning" ghost @click="secretkeyBackups">密钥备份
         <template #icon>
           <n-icon>
             <BackupFilled />
           </n-icon>
         </template>
       </n-button>
-      <n-button type="warning" ghost @click="secrekeyRecovery">密钥恢复
+      <n-button type="warning" ghost @click="secretkeyRecovery">密钥恢复
         <template #icon>
           <n-icon>
             <RefreshRound />
@@ -56,13 +56,13 @@
     <BasicTable v-if="tabKey == 'sm14'" :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="serviceRef"
       :actionColumn="actionColumn"></BasicTable>
 
-    <n-modal v-model:show="secrekeyControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
+    <n-modal v-model:show="secretkeyControl.editShow" preset="dialog" title="Dialog" :mask-closable="false"
       style="width:600px">
       <template #header>
-        <div>{{secrekeyControl.title}}</div>
+        <div>{{secretkeyControl.title}}</div>
       </template>
       <div>
-        <editSecrekey ref="secrekeyEditRef" :secrekeyInfo="secrekeyInfo" :secrekeyId="secrekeyControl.secrekeyId" :isAdd="secrekeyControl.isAdd" />
+        <editSecretkey ref="secretkeyEditRef" :secretkeyInfo="secretkeyInfo" :secretkeyId="secretkeyControl.secretkeyId" :isAdd="secretkeyControl.isAdd" />
       </div>
       <template #action>
         <n-space>
@@ -90,9 +90,9 @@
 import { reactive, ref, h, watch } from 'vue';
 import { BasicTable } from '@/components/Table';
 import {
-  getSecrekeyList, addSecrekeyRequest, deleteSecrekeyRequest
-} from '@/api/system/secrekey';
-import editSecrekey from './editSecrekey.vue'
+  getSecretkeyList, addSecretkeyRequest, deleteSecretkeyRequest
+} from '@/api/system/secretkey';
+import editSecretkey from './editSecretkey.vue'
 import keyBackups from './keyBackups.vue'
 import keyRecovery from './keyRecovery.vue'
 import { PlusOutlined,SearchOutlined,ReloadOutlined, EditOutlined, DeleteOutlined } from '@vicons/antd'
@@ -116,15 +116,15 @@ const columns = [
 const serviceRef = ref();
 const tabKey = ref('sm2');
 const serviceSm2Ref = ref();
-const secrekeyEditRef = ref();
+const secretkeyEditRef = ref();
 const layerMsg = useMessage();
 const layerDialog = useDialog();
-const secrekeyControl = reactive({
+const secretkeyControl = reactive({
   editShow: false,
   title: "修改密钥",
   typeOptions: [{ label: "请选择密钥类型", value:""}, { label: "sm1", value:"sm1"}, { label: "sm2", value: "sm2" }, { label: "sm4", value: "sm4" }],
   isAdd: true,
-  secrekeyId: null,
+  secretkeyId: null,
   searchPager: {
     pageNo: 1,
     pageSize: 10
@@ -138,7 +138,7 @@ const backupRecovery = reactive({
   title:"密钥备份",
   isBackup:true
 })
-const secrekeyInfo = reactive({
+const secretkeyInfo = reactive({
   "keytype": "sm2",
   "keyindex": "",
   "keylen":"",
@@ -164,19 +164,19 @@ const actionColumn = reactive({
           size: 'tiny',
           ghost:true,
           style: "margin-right:5px",
-          onClick: () => deleteSecrekey(row)
+          onClick: () => deleteSecretkey(row)
         },
         { default: () => '删除',icon:()=>h(DeleteOutlined) }
       )
     ]
   },
 });
-const secrekeyBackups = () => {
+const secretkeyBackups = () => {
   backupRecovery.isBackup = true;
   backupRecovery.title = '密钥备份';
   backupRecovery.show = true;
 }
-const secrekeyRecovery = () => {
+const secretkeyRecovery = () => {
   backupRecovery.isBackup = false;
   backupRecovery.title = '密钥恢复';
   backupRecovery.show = true;
@@ -187,7 +187,7 @@ const closeModal = (isFinish) => {
 
 }
 function saveEdit() {
-    secrekeyEditRef.value.checkForm(function(){
+    secretkeyEditRef.value.checkForm(function(){
       addRequest();
     })
   };
@@ -196,18 +196,18 @@ function resetParams() {
   reloadTable();
 }
 function closeEdit() {
-  secrekeyControl.editShow = false;
+  secretkeyControl.editShow = false;
   clearEdit();
 };
 function clearEdit() {
-  secrekeyInfo.keytype = "sm2";
-  secrekeyInfo.keyindex = "";
-  secrekeyInfo.keylen = "";
-  secrekeyInfo.sm2Keyindex = "";
-  secrekeyInfo.smKeyindex = "";
-  secrekeyControl.secrekeyId = null;
+  secretkeyInfo.keytype = "sm2";
+  secretkeyInfo.keyindex = "";
+  secretkeyInfo.keylen = "";
+  secretkeyInfo.sm2Keyindex = "";
+  secretkeyInfo.smKeyindex = "";
+  secretkeyControl.secretkeyId = null;
 }
-function deleteSecrekey(row) {
+function deleteSecretkey(row) {
   layerDialog.warning({
     title: "提示",
     content: `确定要删除索引为 ${row.keyindex} 的密钥吗？`,
@@ -219,7 +219,7 @@ function deleteSecrekey(row) {
   })
 }
 const deleteRequest = async (id,keytype) => {
-  let deleteRespons = await deleteSecrekeyRequest(id,{keytype:keytype == 'sm2'?'sm2':'sm1'});
+  let deleteRespons = await deleteSecretkeyRequest(id,{keytype:keytype == 'sm2'?'sm2':'sm1'});
   if (deleteRespons.code != 0) {
     layerMsg.error(deleteRespons.message || "新增失败");
   } else {
@@ -228,7 +228,7 @@ const deleteRequest = async (id,keytype) => {
   }
 }
 const addRequest = async () => {
-  let postObj = JSON.parse(JSON.stringify(secrekeyInfo));
+  let postObj = JSON.parse(JSON.stringify(secretkeyInfo));
   for (let k in postObj) {
     if (!postObj[k]) {
       delete postObj[k]
@@ -244,7 +244,7 @@ const addRequest = async () => {
   delete postObj['smKeyindex'];
   delete postObj['sm2Keyindex'];
   postObj['keylen']?postObj['keylen'] = parseInt(postObj['keylen']):'';
-  let saveRespons = await addSecrekeyRequest(postObj);
+  let saveRespons = await addSecretkeyRequest(postObj);
   if (saveRespons.code != 0) {
     layerMsg.error(saveRespons.message || "新增失败");
   } else {
@@ -259,7 +259,7 @@ const loadSM2DataTable = async (res) => {
     pageNo:res.pageNo,
     pageSize:res.pageSize
   }
-  let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm2"} });
+  let userList = await getSecretkeyList({ ...params, ...postPager,...{keytype:"sm2"} });
   return new Promise((resolve) => {
     let rData = {
       list: userList.result.data,
@@ -276,7 +276,7 @@ const loadDataTable = async (res) => {
     pageNo:res.pageNo,
     pageSize:res.pageSize
   }
-  let userList = await getSecrekeyList({ ...params, ...postPager,...{keytype:"sm1"}});
+  let userList = await getSecretkeyList({ ...params, ...postPager,...{keytype:"sm1"}});
   return new Promise((resolve) => {
     let rData = {
       list: userList.result.data,
@@ -297,12 +297,12 @@ function reloadTable() {
   }
 }
 
-function addSecrekey() {
-  secrekeyControl.isAdd = true;
-  secrekeyControl.title = "生产密钥";
-  secrekeyControl.editShow = true;
+function addSecretkey() {
+  secretkeyControl.isAdd = true;
+  secretkeyControl.title = "生产密钥";
+  secretkeyControl.editShow = true;
 };
-watch(secrekeyControl, (nv) => {
+watch(secretkeyControl, (nv) => {
   if (!nv.editShow) {
     clearEdit();
   }

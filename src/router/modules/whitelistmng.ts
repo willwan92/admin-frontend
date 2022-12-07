@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { HomeFilled } from '@vicons/antd';
+import { ListChecked } from '@vicons/carbon';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -15,30 +15,30 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
-    name: 'home',
+    path: '/whitelistmng',
+    name: 'whitelistmng',
     component: Layout,
     meta: {
-      sort: 1,
+      sort: 7,
       isRoot: true,
-      title:"系统首页",
-      activeMenu: 'home_index',
-      icon: renderIcon(HomeFilled),
-      showIn:['system','business','audit']
+      title: '白名单管理',
+      activeMenu: 'system_whitelist',
+      icon: renderIcon(ListChecked),
+      showIn:['business']
     },
     children: [
-      {
-        path: 'index',
-        name: `home_index`,
-        meta: {
-          title: '系统首页',
-          activeMenu: 'home_index',
-          showIn:['system','business','audit']
-        },
-        component: () => import('@/views/home/index.vue'),
-      }
+        {
+            path: 'whitelist',
+            name: `system_whitelist`,
+            meta: {
+              title: '白名单管理',
+              activeMenu: 'system_whitelist',
+              showIn:['business']
+            },
+            component: () => import('@/views/whitelist/index.vue'),
+          },
     ],
-  }
+  },
 ];
 
 export default routes;
