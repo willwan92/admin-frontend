@@ -1,5 +1,39 @@
 <template>
   <n-card
+    title="Web超时设置"
+    size="medium"
+    :segmented="{
+      content: true,
+    }"
+    style="margin-bottom: 10px"
+  >
+    <n-form
+      ref="webTimeoutFormRef"
+      :model="webTimeoutForm"
+      :rules="webTimeoutConfRules"
+      label-placement="left"
+      label-align="right"
+      label-width="150px"
+      require-mark-placement="right-hanging"
+    >
+      <n-form-item label="超时时间" path="period">
+        <n-input-number
+          v-model:value="webTimeoutForm.timeout"
+          :show-button="false"
+          placeholder="1-20"
+        >
+          <template #suffix> 分钟 </template>
+        </n-input-number>
+      </n-form-item>
+      <n-form-item label=" " path="">
+        <n-button type="primary" size="medium" :loading="isSaving" @click="handleSaveClick"
+          >保存设置</n-button
+        >
+      </n-form-item>
+    </n-form>
+  </n-card>
+
+  <n-card
     title="时间管理"
     :segmented="{
       content: true,
@@ -78,10 +112,44 @@
   import { FormRules, useMessage } from 'naive-ui';
   import { IPV4_REGEXP } from '@/enums/regexpEnum';
   import * as TimeModel from '@/api/models/time';
+  import { TimeoutModel } from '@/api/models/timeout';
   import * as TimeApi from '@/api/system/time';
+  import * as TimeoutApi from '@/api/system/timeout';
   import { formatToDateTime } from '@/utils/dateUtil';
 
   const message = useMessage();
+
+  const webTimeoutFormRef = ref();
+  const isSaving = ref(false);
+  const webTimeoutForm = reactive<TimeoutModel>({
+    timeout: 10,
+  });
+  TimeoutApi.getTimeout().then(({ result }) => {
+    webTimeoutForm.timeout = result.timeout;
+  });
+
+  const webTimeoutConfRules: FormRules = {
+    timeout: [
+      { required: true, type: 'integer', trigger: ['change'], message: '请输入Web超时时间' },
+      { type: 'integer', trigger: ['change'], min: 1, max: 20, message: '请输入1-20的整数' },
+    ],
+  };
+  const handleSaveClick = () => {
+    isSaving.value = true;
+    webTimeoutFormRef.value?.validate((errors) => {
+      if (errors) {
+        return;
+      }
+
+      TimeoutApi.updateTimeout(webTimeoutForm)
+        .then(() => {
+          message.success('保存成功');
+        })
+        .finally(() => {
+          isSaving.value = false;
+        });
+    });
+  };
 
   const timeForm = reactive({
     systime: '',
