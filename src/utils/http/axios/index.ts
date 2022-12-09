@@ -3,6 +3,7 @@ import { VAxios } from './Axios';
 import { AxiosTransform } from './axiosTransform';
 import axios, { AxiosResponse } from 'axios';
 import { checkStatus } from './checkStatus';
+import { ACCESS_TOKEN } from '@/store/mutation-types';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { PageEnum } from '@/enums/pageEnum';
@@ -175,8 +176,13 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    // 请求之前处理config
+    // 请求之前刷新token（web超时相关）
     const userStore = useUserStoreWidthOut();
+    const newToken = storage.getCookie('token');
+    newToken && storage.set(ACCESS_TOKEN, newToken);
+    newToken && userStore.setToken(newToken);
+
+    // 请求之前处理config
     const token = userStore.getToken;
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token

@@ -101,6 +101,7 @@ export const useUserStore = defineStore({
       await logoutReq({username:this.info.username});
       this.setPermissions([]);
       this.setUserInfo('');
+      storage.removeCookie('token');
       storage.remove(ACCESS_TOKEN);
       storage.remove(CURRENT_USER);
       return Promise.resolve('');
