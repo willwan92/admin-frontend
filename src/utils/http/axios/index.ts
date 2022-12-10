@@ -37,18 +37,13 @@ const transform: AxiosTransform = {
       isShowSuccessMessage,
       successMessageText,
       errorMessageText,
-      isTransformResponse = true,
+      isTransformResponse = false,
       isReturnNativeResponse,
     } = options;
 
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
     if (isReturnNativeResponse) {
       return res;
-    }
-    // 不进行任何处理，直接返回
-    // 用于页面代码可能需要直接获取code，data，message这些信息时开启
-    if (!isTransformResponse) {
-      return res.data;
     }
 
     const { data } = res;
@@ -86,10 +81,6 @@ const transform: AxiosTransform = {
       }
     }
 
-    // 接口请求成功，直接返回结果
-    if (code === ResultEnum.SUCCESS) {
-      return result;
-    }
     // 接口请求错误，统一提示错误信息 这里逻辑可以根据项目进行修改
     let errorMsg = message;
     switch (code) {
@@ -119,6 +110,18 @@ const transform: AxiosTransform = {
         });
         break;
     }
+
+    // 不进行任何处理，直接返回
+    // 用于页面代码可能需要直接获取code，data，message这些信息时开启
+    if (!isTransformResponse) {
+      return res.data;
+    }
+
+    // 接口请求成功，直接返回结果
+    if (code === ResultEnum.SUCCESS) {
+      return result;
+    }
+
     throw new Error(errorMsg);
   },
 
