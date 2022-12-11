@@ -39,8 +39,21 @@
 import { ref, reactive, onBeforeMount } from 'vue'
 import { getRevocationInfoRequest,releaseRevocationRequest } from "@/api/init"
 import { useMessage,FormItemRule } from 'naive-ui';
-import * as moment from 'moment';
 import {PWD_REGEXP} from '@/plugins/regexp'
+
+function tTN(num){
+    if(num<10){
+      return '0'+num;
+    }else{
+      return num;
+    }
+  }
+function formatTime(time){
+    let a = new Date(time);
+        let timeStr = `${a.getFullYear()}-${tTN(a.getMonth()+1)}-${tTN(a.getDate())} 
+                ${tTN(a.getHours())}:${tTN(a.getMinutes())}:${tTN(a.getSeconds())}`
+        return timeStr;
+}
 
 const rules = {
     password: {required: true,validator(rule:FormItemRule,value:string){
@@ -98,9 +111,9 @@ const getCaInfo = async () => {
         let info = res.result;
         let infoItem = { name: '版本', value: info.version };
         caInfo.push(infoItem);
-        infoItem = { name: '更新时间', value:moment(info.nextupdate).format("YYYY/MM/DD HH:mm:ss")};
+        infoItem = { name: '更新时间', value:formatTime(info.nextupdate)};
         caInfo.push(infoItem);
-        infoItem = { name: '下次更新时间', value:moment(info.lastupdate).format("YYYY/MM/DD HH:mm:ss")};
+        infoItem = { name: '下次更新时间', value:formatTime(info.lastupdate)};
         caInfo.push(infoItem);
         infoItem = { name: '颁发者', value: info.issuer };
         caInfo.push(infoItem);

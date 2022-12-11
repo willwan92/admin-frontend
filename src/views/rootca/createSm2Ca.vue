@@ -102,9 +102,14 @@
   import importSm2Modal from './components/importSm2Modal.vue'
   import { PlusOutlined,SearchOutlined,ReloadOutlined, ExportOutlined, DeleteOutlined,ImportOutlined } from '@vicons/antd'
   import{ FormatClearSharp } from "@vicons/material"
-  import * as moment from 'moment';
   import { NButton, useMessage, useDialog,NTag } from 'naive-ui'
-  
+  function tTN(num){
+    if(num<10){
+      return '0'+num;
+    }else{
+      return num;
+    }
+  }
   const columns = [
     {
       title: '名称',
@@ -137,7 +142,10 @@
       align: 'center',
       width:180,
       render(row){
-        return moment(row.startdate).format("YYYY/MM/DD HH:mm:ss")
+        let a = new Date(row.startdate);
+        let timeStr = `${a.getFullYear()}-${tTN(a.getMonth()+1)}-${tTN(a.getDate())} 
+              ${tTN(a.getHours())}:${tTN(a.getMinutes())}:${tTN(a.getSeconds())}`
+        return timeStr;
       }
     },
     {
@@ -146,7 +154,10 @@
       align: 'center',
       width:180,
       render(row){
-        return moment(row.enddate).format("YYYY/MM/DD HH:mm:ss")
+        let a = new Date(row.enddate);
+        let timeStr = `${a.getFullYear()}-${tTN(a.getMonth()+1)}-${tTN(a.getDate())} 
+              ${tTN(a.getHours())}:${tTN(a.getMinutes())}:${tTN(a.getSeconds())}`
+        return timeStr;
       }
     },
     {

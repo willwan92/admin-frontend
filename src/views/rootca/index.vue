@@ -15,13 +15,25 @@
 <script lang="ts" setup>
 import { ref,reactive,onBeforeMount } from 'vue'
 import { getCaInfoRequest } from "@/api/init"
-import * as moment from 'moment';
 import { useMessage } from 'naive-ui';
 
 
 interface caInfoItem {
     name:string,
     value:string
+}
+function tTN(num){
+    if(num<10){
+      return '0'+num;
+    }else{
+      return num;
+    }
+  }
+function formatTime(time){
+    let a = new Date(time);
+        let timeStr = `${a.getFullYear()}-${tTN(a.getMonth()+1)}-${tTN(a.getDate())} 
+                ${tTN(a.getHours())}:${tTN(a.getMinutes())}:${tTN(a.getSeconds())}`
+        return timeStr;
 }
 const laymsg = useMessage();
 const reqLoading = ref(true);
@@ -46,9 +58,9 @@ const getCaInfo = async () => {
         caInfo.push(infoItem);
         infoItem = {name:'签名算法',value:info.sign_alg};
         caInfo.push(infoItem);
-        infoItem = {name:'起始时间',value:moment(info.startdate).format("YYYY/MM/DD HH:mm:ss")};
+        infoItem = {name:'起始时间',value:formatTime(info.startdate)};
         caInfo.push(infoItem);
-        infoItem = {name:'终止时间',value:moment(info.enddate).format("YYYY/MM/DD HH:mm:ss")};
+        infoItem = {name:'终止时间',value:formatTime(info.startdate)};
         caInfo.push(infoItem);
     }else{
         laymsg.error("获取证书信息失败");
