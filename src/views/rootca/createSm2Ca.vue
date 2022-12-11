@@ -102,6 +102,7 @@
   import importSm2Modal from './components/importSm2Modal.vue'
   import { PlusOutlined,SearchOutlined,ReloadOutlined, ExportOutlined, DeleteOutlined,ImportOutlined } from '@vicons/antd'
   import{ FormatClearSharp } from "@vicons/material"
+  import * as moment from 'moment';
   import { NButton, useMessage, useDialog,NTag } from 'naive-ui'
   
   const columns = [
@@ -133,12 +134,20 @@
     {
       title: '起始时间',
       key: 'startdate',
-      align: 'center'
+      align: 'center',
+      width:180,
+      render(row){
+        return moment(row.startdate).format("YYYY/MM/DD HH:mm:ss")
+      }
     },
     {
       title: '终止时间',
       key: 'enddate',
-      align: 'center'
+      align: 'center',
+      width:180,
+      render(row){
+        return moment(row.enddate).format("YYYY/MM/DD HH:mm:ss")
+      }
     },
     {
       title: '序列号',
@@ -150,6 +159,7 @@
       title: '是否可用',
       key: 'method',
       align: 'center',
+      width:120,
       render(row) {
         return h(
           NTag,

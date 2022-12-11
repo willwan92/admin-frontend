@@ -52,6 +52,7 @@ import { getCaInfoRequest,initCaRequest,importCaRequest } from "@/api/init"
 import { useMessage } from 'naive-ui';
 import createCaModal from './components/createCaModal.vue'
 import importCaModal from './components/importCaModal.vue'
+import * as moment from 'moment';
 
 
 const createRef = ref();
@@ -155,9 +156,9 @@ const getCaInfo = async () => {
         caInfo.push(infoItem);
         infoItem = { name: '签名算法', value: info.sign_alg };
         caInfo.push(infoItem);
-        infoItem = { name: '起始时间', value: info.startdate };
+        infoItem = { name: '起始时间', value:moment(info.startdate).format("YYYY/MM/DD HH:mm:ss")};
         caInfo.push(infoItem);
-        infoItem = { name: '终止时间', value: info.enddate };
+        infoItem = { name: '终止时间', value:moment(info.enddate).format("YYYY/MM/DD HH:mm:ss")};
         caInfo.push(infoItem);
     } else {
         laymsg.error("获取证书信息失败");

@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
       title: '证书管理',
       activeMenu: 'sysrootca',
       icon: renderIcon(SafetyCertificateOutlined),
-      showIn:['business','system']
+      showIn:['business']
     },
     children: [
       {
