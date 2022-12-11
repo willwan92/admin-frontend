@@ -164,7 +164,141 @@ export function getCaInfoRequest() {
 }
 /**
 *
+* @description：导入证书
+*/
+export function importCaRequest(params) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/importCa`,
+            method: 'POST',
+            data:params
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+*
+* @description：生成私钥与证书
+*/
+export function createCertRequest(params) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/createCert`,
+            method: 'POST',
+            data:params
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+*
+* @description：获取SM2证书列表
+*/
+export function getSm2ListRequest(params) {
+    let paramsStr = '';
+    for(let key in params){
+        if(params[key]){
+        paramsStr += key+'='+params[key]+'&'
+        }
+    }
+    return http.request<BasicResponseModel>(
+        {
+            url: `/sm2cert/show?${paramsStr}`,
+            method: 'get'
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+*
+* @description：删除证书
+*/
+export function deleteCaRequest(name) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/delcert/${name}`,
+            method: 'delete'
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+*
+* @description：吊销证书
+*/
+export function revocationCaRequest(params) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/revoke`,
+            method: 'POST',
+            data:params
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+
+/**
+*
+* @description：发布吊销列表
+*/
+export function releaseRevocationRequest(params) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/releasecrl`,
+            method: 'POST',
+            data:params
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+*
+* @description：导入SM2证书
+*/
+export function importSm2Request(params) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/importSm2`,
+            method: 'POST',
+            data:params
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+
+/**
+*
 * @description：获取证书信息
+*/
+export function getRevocationInfoRequest() {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/crlcert/show`,
+            method: 'get'
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+
+/**
+*
+* @description：获取初始化进度
 */
 export function getInitProgressRequest() {
     return http.request<BasicResponseModel>(

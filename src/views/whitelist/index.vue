@@ -206,7 +206,7 @@
   const deleteRequest = async (id) => {
     let deleteRespons = await deleteWhitelistRequest(id);
     if (deleteRespons.code != 0) {
-      layerMsg.error(deleteRespons.message || "新增失败");
+      layerMsg.error(deleteRespons.message || "删除失败");
     } else {
       layerMsg.success("删除成功");
       reloadTable();

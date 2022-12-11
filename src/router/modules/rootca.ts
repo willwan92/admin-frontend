@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
       title: '证书管理',
       activeMenu: 'sysrootca',
       icon: renderIcon(SafetyCertificateOutlined),
-      showIn:['business']
+      showIn:['business','system']
     },
     children: [
       {
@@ -37,8 +37,38 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/rootca/index.vue'),
       },
+      {
+        path: 'sm2ca',
+        name: 'sm2ca',
+        meta: {
+          title: 'SM2CA证书',
+          activeMenu: 'sm2ca',
+          showIn:['business']
+        },
+        component: () => import('@/views/rootca/sm2ca.vue'),
+      },
+      {
+        path: 'createSm2Ca',
+        name: 'createSm2Ca',
+        meta: {
+          title: '生成sm2证书',
+          activeMenu: 'createSm2Ca',
+          showIn:['business']
+        },
+        component: () => import('@/views/rootca/createSm2Ca.vue'),
+      },
+      {
+        path: 'revocationCa',
+        name: 'revocationCa',
+        meta: {
+          title: '吊销证书',
+          activeMenu: 'revocationCa',
+          showIn:['business']
+        },
+        component: () => import('@/views/rootca/revocationCa.vue'),
+      },
     ],
-  },
+  }
 ];
 
 export default routes;

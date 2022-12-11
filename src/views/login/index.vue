@@ -89,8 +89,8 @@ const loading = ref(false);
 const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
 const formInline = reactive({
-  username: 'admin',
-  password: 'admin@123',
+  username: 'user2',
+  password: 'admin@123456',
   captcha: '',
   captchaUrl: '/api/auth/captcha',
 });
