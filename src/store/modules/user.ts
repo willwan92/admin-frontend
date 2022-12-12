@@ -3,7 +3,7 @@ import { store } from '@/store';
 import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-types';
 import { ResultEnum } from '@/enums/httpEnum';
 
-import { login,logoutReq } from '@/api/auth';
+import { login, logoutReq } from '@/api/auth';
 import { getUserRequest, getUserList } from '@/api/system/user';
 import { storage } from '@/utils/Storage';
 
@@ -62,6 +62,7 @@ export const useUserStore = defineStore({
         const { result, code } = response;
         if (code === ResultEnum.SUCCESS) {
           const ex = 7 * 24 * 60 * 60 * 1000;
+          storage.removeCookie('token');
           storage.set(ACCESS_TOKEN, result.token, ex);
           storage.set(CURRENT_USER, result, ex);
           storage.set(IS_LOCKSCREEN, false);
@@ -98,7 +99,7 @@ export const useUserStore = defineStore({
 
     // 登出
     async logout() {
-      await logoutReq({username:this.info.username});
+      await logoutReq({ username: this.info.username });
       this.setPermissions([]);
       this.setUserInfo('');
       storage.removeCookie('token');
