@@ -9,6 +9,7 @@
                     @finish="uploadFinish"
                     @beforeUpload="beforeUpload"
                     @error="uploadError"
+                    max="1"
                     :headers="{
                         'Authorization': pageToken
                     }"
@@ -25,6 +26,7 @@
                     @finish="uploadFinish2"
                     @beforeUpload="beforeUpload"
                     @error="uploadError"
+                    max="1"
                     :headers="{
                         'Authorization': pageToken
                     }"

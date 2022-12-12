@@ -117,23 +117,8 @@
       align: 'center'
     },
     {
-      title: '类型',
-      key: 'type',
-      align: 'center'
-    },
-    {
-      title: '颁发者',
-      key: 'issuer',
-      align: 'center'
-    },
-    {
       title: '主题',
       key: 'subject',
-      align: 'center'
-    },
-    {
-      title: '国家',
-      key: 'cn',
       align: 'center'
     },
     {
@@ -160,12 +145,6 @@
         return timeStr;
       }
     },
-    {
-      title: '序列号',
-      key: 'serial',
-      align: 'center'
-    }
-    ,
     {
       title: '是否可用',
       key: 'method',

@@ -60,9 +60,12 @@ const current = ref<number>(1);
 const currentStatus = ref<StepsProps['status']>('process');
 const next = () => {
   if (current.value === null) current.value = 1
-  else if (current.value >= 12) current.value = 1
+  else if (current.value >= 13) current.value = 1
   else current.value++
   carousIndex.value = current.value - 1;
+  setLoginOrAddShowHide();
+}
+const setLoginOrAddShowHide = () => {
   if (infoSteps.findIndex((item) => current.value === item) >= 0) {
     infoShow.value = true;
     loginShow.value = false;
@@ -89,6 +92,7 @@ onBeforeMount(() => {
   })
   current.value = cpi + 1;
   carousIndex.value = cpi;
+  setLoginOrAddShowHide()
 })
 </script>
 <style>

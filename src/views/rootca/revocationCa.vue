@@ -111,9 +111,9 @@ const getCaInfo = async () => {
         let info = res.result;
         let infoItem = { name: '版本', value: info.version };
         caInfo.push(infoItem);
-        infoItem = { name: '更新时间', value:formatTime(info.nextupdate)};
+        infoItem = { name: '更新时间', value:formatTime(info.lastupdate)};
         caInfo.push(infoItem);
-        infoItem = { name: '下次更新时间', value:formatTime(info.lastupdate)};
+        infoItem = { name: '下次更新时间', value:formatTime(info.nextupdate)};
         caInfo.push(infoItem);
         infoItem = { name: '颁发者', value: info.issuer };
         caInfo.push(infoItem);

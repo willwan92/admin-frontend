@@ -12,6 +12,7 @@
                     @finish="uploadFinish"
                     @beforeUpload="beforeUpload"
                     @error="uploadError"
+                    max="1"
                     :headers="{
                         'Authorization': pageToken
                     }"

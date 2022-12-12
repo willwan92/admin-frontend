@@ -21,6 +21,7 @@
                   @finish="uploadFinish"
                   @beforeUpload="beforeUpload"
                   @error="uploadError"
+                  max="1"
                   :headers="{
                       'Authorization': pageToken
                   }"
@@ -75,8 +76,14 @@
     const beforeUpload = () => {
       reqLoading.value = true;
     }
-    const uploadFinish = () => {
-      keyRecovery();
+    const uploadFinish = (res) => {
+      let resInfo = JSON.parse(res.event.srcElement.response);
+      if(resInfo.code == 0){
+          keyRecovery();
+      }else{
+          layerMsg.error(resInfo.message);
+      }
+      reqLoading.value = false;
     }
     const uploadError = () => {
       layerMsg.error("文件上传失败");

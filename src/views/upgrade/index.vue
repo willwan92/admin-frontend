@@ -8,6 +8,7 @@
                         @finish="uploadFinish"
                         @beforeUpload="beforeUpload"
                         @error="uploadError"
+                        max="1"
                         :headers="{
                             'Authorization': pageToken
                         }"
@@ -103,9 +104,14 @@
     reloadTable();
   }
   
-  const uploadFinish = () => {
+  const uploadFinish = (res) => {
+    let resInfo = JSON.parse(res.event.srcElement.response);
+    if(resInfo.code == 0){
+        layerMsg.success('上传成功');
+    }else{
+        layerMsg.error(resInfo.message);
+    }
     uploadLoading.value = false;
-    layerMsg.success("上传成功");
   }
   const beforeUpload = () => {
     uploadLoading.value = true;

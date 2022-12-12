@@ -28,20 +28,10 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: 'sysrootca',
-        name: 'sysrootca',
-        meta: {
-          title: '根证书',
-          activeMenu: 'sysrootca',
-          showIn:['business']
-        },
-        component: () => import('@/views/rootca/index.vue'),
-      },
-      {
         path: 'sm2ca',
         name: 'sm2ca',
         meta: {
-          title: 'SM2CA证书',
+          title: '根证书',
           activeMenu: 'sm2ca',
           showIn:['business']
         },
