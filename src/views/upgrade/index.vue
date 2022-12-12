@@ -8,6 +8,9 @@
                         @finish="uploadFinish"
                         @beforeUpload="beforeUpload"
                         @error="uploadError"
+                        :headers="{
+                            'Authorization': pageToken
+                        }"
                     >
                         <n-space justify="center">
                         <n-button type="info">上传升级文件</n-button>
@@ -58,6 +61,9 @@
   import {getUpgradeRecodeRequest,upgradeRequest} from '@/api/upgrade';
   import { SearchOutlined,ReloadOutlined } from '@vicons/antd'
   import { useMessage, useDialog } from 'naive-ui'
+  import { useUserStore } from '@/store/modules/user';
+    const userStore = useUserStore();
+    const pageToken = ref(userStore.getToken)
   
   const uploadLoading = ref(false);
   const upgradeTitle = ref('系统当前软件版本');

@@ -21,6 +21,9 @@
                   @finish="uploadFinish"
                   @beforeUpload="beforeUpload"
                   @error="uploadError"
+                  :headers="{
+                      'Authorization': pageToken
+                  }"
                 >
                   <n-space justify="center">
                     <n-button type="info">上传恢复文件</n-button>
@@ -46,6 +49,9 @@
     import { ref,defineEmits,reactive,watch } from 'vue';
     import { StepsProps,useMessage } from 'naive-ui';
     import {cardLoginRequest,keyRecoveryRequest,cardRecoveryRequest,} from '@/api/system/secretkey'
+    import { useUserStore } from '@/store/modules/user';
+    const userStore = useUserStore();
+    const pageToken = ref(userStore.getToken)
     const emits = defineEmits(['closeModal']);
     const currentStatus = ref<StepsProps['status']>('process');
     const layerMsg = useMessage();

@@ -8,7 +8,7 @@
   </div>
   <div class="init-con flexBox">
     <div class="init-big-step">
-      <div v-for="(nav,index) in bigStepArr" @click="bigStepGo(index)" :class="['init-step-title',currentStepNum==index?'active':'']">{{nav.title}}</div>
+      <div v-for="(nav,index) in bigStepArr" :class="['init-step-title',currentStepNum==index?'active':'']">{{nav.title}}</div>
     </div>
     <div class="init-small-steps" v-if="initShow">
       <initcard v-if="currentStepNum == 0" :p="currentProgress" @go="nextBigStep"  />
