@@ -103,6 +103,11 @@
   import { PlusOutlined,SearchOutlined,ReloadOutlined, ExportOutlined, DeleteOutlined,ImportOutlined } from '@vicons/antd'
   import{ FormatClearSharp } from "@vicons/material"
   import { NButton, useMessage, useDialog,NTag } from 'naive-ui'
+
+  import { downloadByUrl } from '@/utils/downloadFile';
+  import { getAppEnvConfig } from '@/utils/env';
+
+  const { VITE_GLOB_API_URL_PREFIX } = getAppEnvConfig();
   function tTN(num){
     if(num<10){
       return '0'+num;
@@ -286,7 +291,10 @@
   }
   const saveImportSm2Request = async () => {
     let res = await importSm2Request(importSm2Info);
-      console.log(res);
+    if(res.code === 0){
+      layerMsg.error("导入成功");
+      closeImportSm2();
+    }
   }
   const closeImportSm2 = () => {
     caKeyControl.importSm2Show = false;
@@ -312,8 +320,6 @@
       revocationInfo.password = "";
       caKeyControl.revocationShow = false;
       reloadTable();
-    }else{
-      layerMsg.error("吊销失败");
     }
   }
   const closeRevocation = () => {
@@ -389,7 +395,8 @@
     caKeyControl.editShow = true;
   };
   async function exportSm2Ca(row){
-    window.open('/api/exportCert?name='+row.name)
+    // window.open('/api/exportCert?name='+row.name)
+    downloadByUrl({url:`${VITE_GLOB_API_URL_PREFIX}/exportCert?name=${row.name}`});
   }
   const clearImportSm2 = () => {
     importSm2Info.reqfile = "";

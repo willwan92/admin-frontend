@@ -63,10 +63,5 @@ export function downloadByUrl({
     e.initEvent('click', true, true);
     link.dispatchEvent(e);
   }
-
-  if (url.indexOf('?') === -1) {
-    url += '?download';
-  }
-
-  window.open(url, target);
+  link.remove();
 }

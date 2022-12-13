@@ -96,10 +96,8 @@
         password:params.password
       })
       if(loginRes.code == 0){
-        layerMsg.success("登陆成功")
+        layerMsg.success("登录成功")
         current.value = current.value + 1;
-      }else{
-        layerMsg.error("登陆失败")
       }
       reqLoading.value = false;
     }

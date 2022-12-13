@@ -1,7 +1,7 @@
 <template>
     <n-card :bordered="false" class="proCard">
         <n-spin :show="reqLoading">
-            <div class="info-title">跟证书信息展示</div>
+            <div class="info-title">根证书信息展示</div>
             <div class="info-con" v-if="caInfo.length">
                 <div class="info-item" v-for="item in caInfo">
                     <div class="info-label">{{ item.name }}:</div>
@@ -49,9 +49,13 @@
 <script lang="ts" setup>
 import { ref, reactive, onBeforeMount,watch } from 'vue'
 import { getCaInfoRequest,initCaRequest,importCaRequest } from "@/api/init"
-import { useMessage } from 'naive-ui';
+import { useMessage } from 'naive-ui'
+import { downloadByUrl } from '@/utils/downloadFile';
+import { getAppEnvConfig } from '@/utils/env';
 import createCaModal from './components/createCaModal.vue'
 import importCaModal from './components/importCaModal.vue'
+
+const { VITE_GLOB_API_URL_PREFIX } = getAppEnvConfig();
 
 function tTN(num){
     if(num<10){
@@ -127,7 +131,7 @@ const closeImport = () => {
     modalControl.importCaShow = false;
 }
 const exportCa = () => {
-    window.open("/api/exportCa");
+    downloadByUrl({url:`${VITE_GLOB_API_URL_PREFIX}/exportCa`});
 }
 const createCa = () => {
     modalControl.createShow = true;

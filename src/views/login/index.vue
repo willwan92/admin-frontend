@@ -16,7 +16,7 @@
           :rules="rules"
         >
           <n-form-item path="username">
-            <n-input v-model:value="formInline.username" placeholder="请输入用户名">
+            <n-input v-model:value="formInline.username" ref="usernameRef" placeholder="请输入用户名">
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <PersonOutline />
@@ -47,15 +47,6 @@
               title="点击刷新"
             />
           </n-form-item>
-          <!-- <n-form-item path="verification">
-            <n-input v-model:value="formInline.username" placeholder="请输入验证码">
-              <template #prefix>
-                <n-icon size="18" color="#808695">
-                  <PersonOutline />
-                </n-icon>
-              </template>
-            </n-input>
-          </n-form-item> -->
           <n-form-item>
             <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
               登录
@@ -68,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref,onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { useMessage } from 'naive-ui';
@@ -82,11 +73,15 @@ interface FormState {
   password: string;
   captcha: string;
 }
-
+const usernameRef = ref();
 const formRef = ref();
 const message = useMessage();
 const loading = ref(false);
 const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
+
+onMounted(()=>{
+  usernameRef.value.focus();
+})
 
 const formInline = reactive({
   username: '',

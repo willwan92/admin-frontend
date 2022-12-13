@@ -96,11 +96,9 @@
         password:params.password
       })
       if(loginRes.code == 0){
-        layerMsg.success("登陆成功")
-      }else{
-        layerMsg.error("登陆失败")
+        layerMsg.success("登录成功")
+        current.value = current.value + 1;
       }
-      current.value = current.value + 1;
       reqLoading.value = false;
     }
     const keyBackup = async ()=>{
@@ -111,10 +109,8 @@
       })
       if(backupRes.code == 0){
         layerMsg.success("选择成功")
-      }else{
-        layerMsg.error("选择失败")
+        current.value = current.value + 1;
       }
-      current.value = current.value + 1;
       reqLoading.value = false;
     }
     const cardBackup =async ()=> {
@@ -125,10 +121,8 @@
       })
       if(backupRes.code == 0){
         layerMsg.success("备份成功")
-      }else{
-        layerMsg.error("备份失败")
+        current.value = current.value + 1;
       }
-      current.value = current.value + 1;
       reqLoading.value = false;
     }
     const loginShow = ref(true);

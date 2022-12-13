@@ -40,6 +40,10 @@ import { ref, reactive, onBeforeMount } from 'vue'
 import { getRevocationInfoRequest,releaseRevocationRequest } from "@/api/init"
 import { useMessage,FormItemRule } from 'naive-ui';
 import {PWD_REGEXP} from '@/plugins/regexp'
+import { downloadByUrl } from '@/utils/downloadFile';
+import { getAppEnvConfig } from '@/utils/env';
+
+const { VITE_GLOB_API_URL_PREFIX } = getAppEnvConfig();
 
 function tTN(num){
     if(num<10){
@@ -83,7 +87,9 @@ const releaseInfo = reactive({
     password:""
 })
 const exportRevocation = async () => {
-    window.open('/api/exportCrl')
+    // window.open('/api/exportCrl')
+    downloadByUrl({url:`${VITE_GLOB_API_URL_PREFIX}/exportCrl`});
+    
 }
 const releaseRevocation = () => {
     modalControl.releaseShow = true;
