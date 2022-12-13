@@ -58,7 +58,8 @@ const transform: AxiosTransform = {
     //  这里 code，result，message为 后台统一的字段，需要修改为项目自己的接口返回格式
     const { code, result, message } = data;
     // 请求成功
-    const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
+    const hasSuccess = data && (code === ResultEnum.SUCCESS || typeof data === 'string');
+
     // 是否显示提示信息
     if (isShowMessage) {
       if (hasSuccess && (successMessageText || isShowSuccessMessage)) {
@@ -113,7 +114,7 @@ const transform: AxiosTransform = {
 
     // 不进行任何处理，直接返回
     // 用于页面代码可能需要直接获取code，data，message这些信息时开启
-    if (!isTransformResponse) {
+    if (!isTransformResponse && hasSuccess) {
       return res.data;
     }
 

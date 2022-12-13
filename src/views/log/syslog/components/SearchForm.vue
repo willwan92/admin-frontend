@@ -54,8 +54,8 @@
 <script lang="ts" setup>
   import { ref, unref, reactive, defineEmits, defineExpose } from 'vue';
   import { QueryLogPageReq } from '@/api/models/log';
-  import { downloadByUrl } from '@/utils/downloadFile';
-  import { getAppEnvConfig } from '@/utils/env';
+  import { getFileData } from '@/api/file';
+  import { download } from '@/utils/downloadFile';
   import { LogPriOptions, LogTypeOptions } from '@/enums/logEnum';
 
   const defaultParams = () => ({
@@ -87,8 +87,9 @@
   };
 
   function handleExportClick() {
-    const { VITE_GLOB_API_URL_PREFIX } = getAppEnvConfig();
-    downloadByUrl({ url: `${VITE_GLOB_API_URL_PREFIX}/logs/export?type=${searchParams.type}` });
+    getFileData('/logs/export').then((data) => {
+      download(data, 'export.log');
+    });
   }
 
   defineExpose({

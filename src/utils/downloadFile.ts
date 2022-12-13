@@ -11,6 +11,33 @@ function getFileName(url) {
 }
 
 /**
+ * 下载文件
+ * @param data
+ * @param filename 文件名称
+ * @returns
+ */
+export function download(data, filename, fileType = '') {
+  if (!data) {
+    return;
+  }
+  const fileBlob = new Blob([data], { type: fileType });
+  if (navigator.msSaveBlob) {
+    // for IE
+    navigator.msSaveBlob(fileBlob, filename);
+  } else {
+    const url = window.URL.createObjectURL(fileBlob);
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+  }
+}
+
+/**
  * 根据文件地址下载文件
  * @param {*} sUrl
  */
