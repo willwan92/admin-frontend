@@ -60,6 +60,8 @@
 <script lang="ts" setup>
     import { ref,defineEmits,reactive,watch } from 'vue';
     import { StepsProps,useMessage } from 'naive-ui';
+    import { getFileData } from '@/api/file';
+    import { download } from '@/utils/downloadFile';
     import {cardLoginRequest,backupTypeRequest,cardBackupRequest} from '@/api/system/secretkey'
     const emits = defineEmits(['closeModal']);
     const currentStatus = ref<StepsProps['status']>('process');
@@ -150,7 +152,9 @@
       params.type = t;
     }
     const downloadFile = () => {
-      window.open("http://222.128.6.205:10444/file/download/encryption_card_data");
+      getFileData('/file/download/encryption_card_data').then((data) => {
+        download(data, 'encryption_card_data', 'application/octet-stream');
+      });
       emits('closeModal',true);
     }
     watch(current,(nv) => {
