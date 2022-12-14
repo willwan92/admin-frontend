@@ -93,6 +93,7 @@
   import { useBattery } from '@/hooks/useBattery';
   import { useLockscreenStore } from '@/store/modules/lockscreen';
   import { useUserStore } from '@/store/modules/user';
+  import { TABS_ROUTES } from '@/store/mutation-types';
 
   export default defineComponent({
     name: 'Lockscreen',
@@ -158,11 +159,15 @@
       const goLogin = () => {
         onLockLogin(false);
         useLockscreen.setLock(false);
-        router.replace({
-          path: '/login',
-          query: {
-            redirect: route.fullPath,
-          },
+
+        userStore.logout().then(() => {
+          // 移除标签页
+          localStorage.removeItem(TABS_ROUTES);
+          router
+            .replace({
+              name: 'Login',
+            })
+            .finally(() => location.reload());
         });
       };
 
