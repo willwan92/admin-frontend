@@ -40,6 +40,7 @@ yarn dev
 yarn build
 ```
 
+
 ## 项目部署
 
 1. 将打包好的dist文件夹压缩成dist.zip包
@@ -58,39 +59,69 @@ yarn build
 - [Vue-Router-Next](https://next.router.vuejs.org/) - 熟悉 vue-router 基本使用
 - [Naive-ui](https://www.naiveui.com/) - ui 基本使用
 
+
 ## 项目目录
 
-.
 ├── build # 打包脚本相关
+
 │   ├── script # 脚本
+
 │   └── vite # vite配置
+
 ├── public # 公共静态资源目录
+
 ├── src # 主目录
+
 │   ├── api # 接口文件
+
 │   ├── assets # 资源文件
+
 │   │   ├── icons # icon sprite 图标文件夹
+
 │   │   ├── images # 项目存放图片的文件夹
+
 │   ├── components # 公共组件
+
 │   ├── directives # 指令
+
 │   ├── enums # 枚举/常量
+
 │   ├── hooks # hook
+
 │   │   ├── core # 基础hook
+
 │   │   ├── event # 事件相关hook
+
 │   │   ├── setting # 配置相关hook
+
 │   │   └── web # web相关hook
+
 │   ├── layouts # 布局文件
+
 │   ├── main.ts # 主入口
+
 │   ├── router # 路由配置
+
 │   ├── settings # 项目配置
+
 │   │   ├── animateSetting.ts # 动画配置
+
 │   │   ├── componentSetting.ts # 组件配置
+
 │   │   ├── designSetting.ts # 样式配置
+
 │   │   ├── projectSetting.ts # 项目配置
+
 │   ├── store # 数据仓库
+
 │   ├── utils # 工具类
+
 │   └── views # 页面
+
 ├── types # 类型文件
+
 ├── vite.config.ts # vite配置文件
+
 
 
 ## 浏览器支持
