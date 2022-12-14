@@ -121,8 +121,9 @@ const transform: AxiosTransform = {
     // 接口请求成功，直接返回结果
     if (code === ResultEnum.SUCCESS) {
       return result;
+    } else if(code === 455){
+      return res.data;
     }
-
     throw new Error(errorMsg);
   },
 

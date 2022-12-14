@@ -67,6 +67,8 @@ import { ResultEnum } from '@/enums/httpEnum';
 import { PersonOutline, LockClosedOutline } from '@vicons/ionicons5';
 import { PageEnum } from '@/enums/pageEnum';
 import { websiteConfig } from '@/config/website.config';
+import { storage } from '@/utils/Storage';
+import { TABS_ROUTES } from '@/store/mutation-types';
 
 interface FormState {
   username: string;
@@ -122,6 +124,7 @@ const loginHandle = () => {
         const res = await userStore.login(params);
         message.destroyAll();
         if (res.code == ResultEnum.SUCCESS) {
+          storage.remove(TABS_ROUTES);
           // const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
           if (route.name === LOGIN_NAME) {
@@ -129,6 +132,7 @@ const loginHandle = () => {
           } else {
             router.replace('/home/index');
           }
+
         } else {
           message.info(res.message || '登录失败');
           refreshCaptach();

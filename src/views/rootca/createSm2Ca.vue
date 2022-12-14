@@ -292,8 +292,9 @@
   const saveImportSm2Request = async () => {
     let res = await importSm2Request(importSm2Info);
     if(res.code === 0){
-      layerMsg.error("导入成功");
+      layerMsg.success("导入成功");
       closeImportSm2();
+      reloadTable();
     }
   }
   const closeImportSm2 = () => {
