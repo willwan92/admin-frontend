@@ -42,32 +42,13 @@ export function download(data, filename, fileType = '') {
  * @param {*} sUrl
  */
 export function downloadByUrl({
-  url,
-  target = '_blank',
-  fileName,
-}: {
-  url: string;
-  target?: '_self' | '_blank';
-  fileName?: string;
-}) {
+  url}: {
+  url: string;}) {
   const link = document.createElement('a');
+  link.style.display = 'none';
   link.href = url;
-  link.target = target;
-
-  if (link.download !== undefined) {
-    link.download = fileName || getFileName(url);
-  }
-
-  if (document.createEvent) {
-    const e = document.createEvent('MouseEvents');
-    e.initEvent('click', true, true);
-    link.dispatchEvent(e);
-    return;
-  }
-
-  if (url.indexOf('?') === -1) {
-    url += '?download';
-  }
-
-  window.open(url, target);
+  link.setAttribute('type','download');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
