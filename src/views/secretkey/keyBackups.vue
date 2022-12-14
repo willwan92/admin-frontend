@@ -147,7 +147,7 @@
       params.type = t;
     }
     const downloadFile = () => {
-      getFileData('/file/download/encryption_card_data').then((data) => {
+      getFileData('/file/download/encryption_card_data', 'blob').then((data) => {
         download(data, 'encryption_card_data', 'application/octet-stream');
       });
       emits('closeModal',true);
