@@ -62,6 +62,12 @@ export function downloadByUrl({
     const e = document.createEvent('MouseEvents');
     e.initEvent('click', true, true);
     link.dispatchEvent(e);
+    return;
   }
-  link.remove();
+
+  if (url.indexOf('?') === -1) {
+    url += '?download';
+  }
+
+  window.open(url, target);
 }
