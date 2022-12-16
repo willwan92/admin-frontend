@@ -542,6 +542,10 @@ const loadDataTable = async (res) => {
     resolve(rData);
   })
 };
+const getUserData = async () => {
+  let userList = await getUserList({ ...params});
+  return userList.result.data;
+}
 function reloadTable() {
   usersRef.value.reload();
 }
@@ -564,6 +568,9 @@ watch(editControl, (nv) => {
   if (!nv.editShow) {
     clearEdit();
   }
+})
+defineExpose({
+  getUserData
 })
 </script>
 

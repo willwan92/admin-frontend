@@ -31,8 +31,8 @@ import initcard from '@/views/init/initCard/index.vue'
 import initCa from '@/views/init/initCa/index.vue'
 import initThreeUser from '@/views/init/initThreeUser/index.vue'
 import { initSecretKeyRequest,getInitProgressRequest } from "@/api/init"
-const initShow = ref(false);
-const currentStepNum = ref(0);
+const initShow = ref(true);
+const currentStepNum = ref(2);
 const dialog = useDialog();
 const message = useMessage();
 const userStore = useUserStore();
@@ -57,7 +57,7 @@ const bigStepArr = ref([
   {title:"证书初始化",progressArr:["cainit"]},
   {title:"三员初始化",progressArr:["mnginit"]}
 ])
-const currentProgress = ref("");
+const currentProgress = ref("mnginit");
 const getInitProgress = async () => {
   let res = await getInitProgressRequest();
   if(res.code === 0){
@@ -118,7 +118,7 @@ const doLogout = () => {
   });
 };
 onBeforeMount(() => {
-    getInitProgress();
+    // getInitProgress();
   })
 </script>
 
