@@ -32,6 +32,13 @@
           </n-button>
         </n-space>
       </n-form>
+      <n-button type="info" ghost @click="clearLogin">退出登录
+      <template #icon>
+        <n-icon>
+          <LogoutOutlined />
+        </n-icon>
+      </template>
+    </n-button>
       <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="usersRef"
         :actionColumn="actionColumn" :pagination="showPager"></BasicTable>
       <n-modal v-model:show="mpm.show" preset="dialog" title="Dialog" :mask-closable="false" style="width:500px">
@@ -60,23 +67,53 @@
         </template>
       </n-modal>
     </n-card>
+    <n-modal v-model:show="loginShow" preset="dialog" title="Dialog" :mask-closable="false"
+      style="width:600px">
+      <template #header>
+        <div>管理卡登录</div>
+      </template>
+      <div>
+        <n-form ref="cardLoginRef" label-placement="left" label-width="auto" :rules="loginRule" :model="loginCardInfo" size="medium"
+            style="width:100%">
+            <n-form-item label="密码" path="password">
+              <n-input v-model:value="loginCardInfo.password" type="password" placeholder="输入密码" />
+            </n-form-item>
+          </n-form>
+      </div>
+      <template #action>
+        <n-space>
+          <n-button type="info" @click="saveLogin">确定</n-button>
+          <n-button @click="closeLogin">取消</n-button>
+        </n-space>
+      </template>
+    </n-modal>
   </template>
   
   <script lang="ts" setup>
   import { reactive, ref, h, watch } from 'vue';
   import { BasicTable } from '@/components/Table';
-  import { addCardRequest, cardLoginRequest, cardLogoutRequest,
-    editCardPasswordRequest, checkCardRequest, getCardList } from '@/api/init';
-  import { EditOutlined, 
-    SearchOutlined, ReloadOutlined } from '@vicons/antd'
-//   import userInfo from './userInfo.vue'
-  import { NButton, useMessage, useDialog, NTag,FormInst, FormItemRule } from 'naive-ui'
+  import { cardLoginOneRequest, cardLogoutRequest,
+    editCardPasswordRequest, getCardList } from '@/api/init';
+  import { EditOutlined,SearchOutlined, ReloadOutlined,LoginOutlined,LogoutOutlined } from '@vicons/antd'
+  import { NButton, useMessage,useDialog, NTag,FormInst, FormItemRule } from 'naive-ui'
   
   import { PWD_REGEXP } from '@/plugins/regexp'
   const psdFormRef = ref<FormInst | null>(null);
-  
+
+  const cardLoginRef = ref<FormInst | null>(null);
+  const layerDialog = useDialog();
+  const loginShow = ref(false);
   const checkPsdForm = (cb) => {
     psdFormRef.value?.validate((errors) => {
+      if (errors) {
+        layerMsg.error("输入信息验证未通过")
+      } else {
+        cb();
+      }
+    })
+  }
+  const checkLoginFrom = (cb) => {
+    cardLoginRef.value?.validate((errors) => {
       if (errors) {
         layerMsg.error("输入信息验证未通过")
       } else {
@@ -156,12 +193,13 @@
   });
   
   const actionColumn = reactive({
-    width: 120,
+    width: 160,
     title: '操作',
     key: 'action',
     fixed: 'right',
     align: 'center',
     render(row) {
+      if(row.login === 'login'){
         return [
             h(
             NButton,
@@ -175,8 +213,39 @@
             { default: () => '修改',icon:()=>h(EditOutlined) }
             )
         ]
+      }else{
+        return [
+            h(
+            NButton,
+            {
+                type: "info",
+                size: 'tiny',
+                ghost:true,
+                style: "margin-right:5px",
+                onClick: () => modifyPassword(row)
+            },
+            { default: () => '修改',icon:()=>h(EditOutlined) }
+            ),
+            h(
+            NButton,
+            {
+                type: "info",
+                size: 'tiny',
+                ghost:true,
+                style: "margin-right:5px",
+                onClick: () => cardLogin(row)
+            },
+            { default: () => '登录',icon:()=>h(LoginOutlined) }
+            )
+        ]
+      }
+        
     },
   });
+  const loginCardInfo = reactive({
+    serial:"",
+    password:""
+  })
   function modifyPassword(row){
     mpm.show = true;
     mpm.serial = row.keyser;
@@ -188,6 +257,57 @@
     mpm.confirmPassword = '';
     mpm.serial = "";
   }
+  const clearLogin = ()=>{
+    layerDialog.warning({
+      title: "提示",
+      content: `确定要退出登录吗？`,
+      positiveText: '确定',
+      negativeText: '取消',
+      onPositiveClick: () => {
+        clearLoginRequest()
+      }
+    })
+  }
+  const cardLogin = (row)=>{
+    loginCardInfo.serial = row.keyser;
+    loginShow.value = true;
+  }
+  const saveLogin = () => {
+    checkLoginFrom(async ()=>{
+      let res = await cardLoginOneRequest(loginCardInfo);
+      if(res.code === 0){
+        layerMsg.success("登陆成功");
+        reloadTable();
+        closeLogin();
+      }else{
+        layerMsg.error("登陆失败");
+      }
+    })
+  }
+  const closeLogin = () => {
+    loginShow.value = false;
+  }
+  const clearLoginRequest = async () => {
+    if(currentCards.list.find(item => item.login === 'login')){
+      let res = await cardLogoutRequest();
+      if(res.code === 0){
+        layerMsg.success("退出登录成功");
+        reloadTable();
+      }else{
+        layerMsg.success(res.message || "退出登录失败");
+      }
+    }else{
+      layerMsg.success("退出登录成功");
+    }
+  }
+  const loginRule = reactive({
+    password: { required: true,validator(rule:FormItemRule,value:string){
+        if(!value){
+          return new Error("请输入密码")
+        }
+        return true;
+      }, trigger: ['blur', 'input']},
+  })
   const setPasswordRules = reactive({
       password: { required: true,validator(rule:FormItemRule,value:string){
         if(!value){
@@ -234,9 +354,12 @@
     params.phone = '';
     reloadTable();
   }
-  
+  const currentCards = reactive({
+    list:[]
+  })
   const loadDataTable = async (res) => {
     let userList = await getCardList({ ...params, ...res });
+    currentCards.list = userList.result.data;
     return new Promise((resolve) => {
       let rData = {
         list: userList.result.data,

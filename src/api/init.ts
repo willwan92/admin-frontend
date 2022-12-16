@@ -29,12 +29,28 @@ export function addCardRequest(params) {
 }
 /**
  *
- * @description：管理卡登录
+ * @description：管理卡认证(登录)
  */
 export function cardLoginRequest(params) {
     return http.request<BasicResponseModel>(
         {
             url: `/mngcard/auth`,
+            method: 'POST',
+            data: params
+        },
+        {
+            isTransformResponse: false,
+        }
+    );
+}
+/**
+ *
+ * @description：管理卡登录
+ */
+ export function cardLoginOneRequest(params) {
+    return http.request<BasicResponseModel>(
+        {
+            url: `/mngcard/authone`,
             method: 'POST',
             data: params
         },
