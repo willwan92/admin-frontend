@@ -110,6 +110,7 @@ const handleSubmit = (e) => {
   loginHandle();
 };
 const loginHandle = () => {
+  if (loading.value) return;
   formRef.value.validate(async (errors) => {
     if (!errors) {
       const { username, password, captcha } = formInline;
@@ -132,11 +133,9 @@ const loginHandle = () => {
           } else {
             router.replace('/home/index');
           }
-
-        } else {
-          message.info(res.message || '登录失败');
-          refreshCaptach();
         }
+      } catch (error) {
+        refreshCaptach();
       } finally {
         loading.value = false;
       }
