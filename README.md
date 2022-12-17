@@ -12,9 +12,7 @@ nodejs获取地址：[node](http://nodejs.org/)
 - 安装yarn
 
 ```bash
-
 npm install -g yarn
-
 ```
 
 
@@ -23,9 +21,7 @@ npm install -g yarn
 - 安装依赖
 
 ```bash
-
 yarn install
-
 ```
 
 - 运行
@@ -34,18 +30,17 @@ yarn install
 yarn dev
 ```
 
-- 打包
+## 项目部署
+
+1. 打包：进入项目根目录，执行如下命令
 
 ```bash
 yarn build
 ```
 
-
-## 项目部署
-
-1. 将打包好的dist文件夹压缩成dist.zip包
-2. 通过ssh登录到服务器，使用`sudo su`切换到root用户
-3. 进入部署目录（/usr/local/var/html），通过命令 `rz -y` 将dist.zip上传到部署目录
+2. 将打包好的dist文件夹压缩成dist.zip包
+3. 通过ssh登录到服务器，使用`sudo su`切换到root用户
+4. 进入部署目录（/usr/local/var/html），通过命令 `rz -y` 将dist.zip上传到部署目录
 通过`unzip dist.zip`解压压缩包，部署完成。
 
 
