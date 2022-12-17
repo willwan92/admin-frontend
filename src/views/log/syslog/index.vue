@@ -27,6 +27,9 @@
       title: '时间',
       key: 'date',
       width: '160',
+      render(row) {
+        return formatToDateTime(new Date(row.date).getTime() - hours, 'yyyy/MM/dd HH:mm:ss');
+      },
     },
     {
       title: '日志类型',
@@ -61,32 +64,16 @@
   ];
 
   const searchFormRef = ref();
+  const hours = 3600 * 1000 * 8;
   const loadDataTable = async (params) => {
     const { searchParams, timeRange } = searchFormRef.value;
-    const hours = 3600 * 1000 * 8;
     const { result } = await getLogList({
       ...searchParams,
       ...params,
-      ...{
-        startDate: formatToDateTime(timeRange[0] + hours),
-        endDate: formatToDateTime(timeRange[1] + hours),
-      },
+      startDate: formatToDateTime(timeRange[0] + hours),
+      endDate: formatToDateTime(timeRange[1] + hours),
     });
-    return new Promise((resolve) => {
-      let rData = {
-        list: result.data.map((item) => {
-          item.date = formatToDateTime(
-            new Date(item.date).getTime() - hours,
-            'yyyy/MM/dd HH:mm:ss'
-          );
-          return item;
-        }),
-        page: parseInt(result.pageNo),
-        pageCount: parseInt(result.total / result.pageSize + 1),
-        pageSize: parseInt(result.pageSize),
-      };
-      resolve(rData);
-    });
+    return result;
   };
 
   const tableRef = ref();

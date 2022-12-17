@@ -52,7 +52,7 @@
           </n-button>
         </n-space>
       </n-form>
-      <BasicTable :toolbarShow=false :columns="columns" :request="loadDataTable" :row-key="(row) => row.id" ref="upgradeListRef"></BasicTable>
+      <BasicTable :toolbarShow=false :columns="columns" :request="getUpgradeRecodeRequest" :row-key="(row) => row.id" ref="upgradeListRef"></BasicTable>
     </n-card>
   </template>
   
@@ -131,18 +131,6 @@
     uploadLoading.value = false;
   }
 
-  const loadDataTable = async () => {
-    let userList = await getUpgradeRecodeRequest();
-    return new Promise((resolve) => {
-      let rData = {
-        list: userList.result.data,
-        page: parseInt(userList.result.pageNo),
-        pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
-        pageSize: parseInt(userList.result.pageSize)
-      }
-      resolve(rData);
-    })
-  };
   function reloadTable() {
     upgradeListRef.value.reload();
   }

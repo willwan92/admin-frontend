@@ -259,16 +259,8 @@ const loadSM2DataTable = async (res) => {
     pageNo:res.pageNo,
     pageSize:res.pageSize
   }
-  let userList = await getSecretkeyList({ ...params, ...postPager,...{keytype:"sm2"} });
-  return new Promise((resolve) => {
-    let rData = {
-      list: userList.result.data,
-      page: parseInt(userList.result.pageNo),
-      pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
-      pageSize: parseInt(userList.result.pageSize)
-    }
-    resolve(rData);
-  })
+  const { result } = await getSecretkeyList({ ...params, ...postPager,...{keytype:"sm2"} });
+  return result;
 };
 
 const loadDataTable = async (res) => {
@@ -276,16 +268,8 @@ const loadDataTable = async (res) => {
     pageNo:res.pageNo,
     pageSize:res.pageSize
   }
-  let userList = await getSecretkeyList({ ...params, ...postPager,...{keytype:"sm1"}});
-  return new Promise((resolve) => {
-    let rData = {
-      list: userList.result.data,
-      page: parseInt(userList.result.pageNo),
-      pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
-      pageSize: parseInt(userList.result.pageSize)
-    }
-    resolve(rData);
-  })
+  const { result } = await getSecretkeyList({ ...params, ...postPager,...{keytype:"sm1"}});
+  return result;
 };
 
 function reloadTable() {

@@ -250,16 +250,8 @@
 }
   
   const loadDataTable = async (res) => {
-    let userList = await getWhitelistList({ ...params, ...res });
-    return new Promise((resolve) => {
-      let rData = {
-        list: userList.result.data,
-        page: parseInt(userList.result.pageNo),
-        pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
-        pageSize: parseInt(userList.result.pageSize)
-      }
-      resolve(rData);
-    })
+    const { result } = await getWhitelistList({ ...params, ...res });
+    return result;
   };
   function reloadTable() {
     serviceRef.value.reload();

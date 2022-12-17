@@ -531,16 +531,8 @@ const editRequest = async () => {
 }
 
 const loadDataTable = async (res) => {
-  let userList = await getUserList({ ...params, ...res });
-  return new Promise((resolve) => {
-    let rData = {
-      list: userList.result.data,
-      page: parseInt(userList.result.pageNo),
-      pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
-      pageSize: parseInt(userList.result.pageSize)
-    }
-    resolve(rData);
-  })
+  const { result } = await getUserList({ ...params, ...res });
+  return result;
 };
 const getUserData = async () => {
   let userList = await getUserList({ ...params});

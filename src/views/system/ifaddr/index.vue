@@ -124,16 +124,7 @@
 
   const searchFormRef = ref();
   const loadDataTable = async (params) => {
-    const { result } = await getIfaddrList({ ...searchFormRef.value.searchParams, ...params });
-    return new Promise((resolve) => {
-      let rData = {
-        list: result.data,
-        page: parseInt(result.pageNo),
-        pageCount: parseInt(result.total / result.pageSize + 1),
-        pageSize: parseInt(result.pageSize),
-      };
-      resolve(rData);
-    });
+    return await getIfaddrList({ ...searchFormRef.value.searchParams, ...params });
   };
 
   const tableRef = ref();

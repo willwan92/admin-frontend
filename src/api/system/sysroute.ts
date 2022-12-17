@@ -3,16 +3,11 @@ import { BasicResponse, PageResponse } from '@/api/models/basic';
 import { SysrouteModel, QuerySysrouteReq } from '@/api/models/sysroute';
 
 export function getSysrouteList(params: QuerySysrouteReq) {
-  return http.request<BasicResponse<PageResponse<SysrouteModel>>>(
-    {
-      url: '/sysroutes',
-      method: 'GET',
-      params,
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
+  return http.request<BasicResponse<PageResponse<SysrouteModel>>>({
+    url: '/sysroutes',
+    method: 'GET',
+    params,
+  });
 }
 
 export function addSysroute(data: Omit<SysrouteModel, 'id'>) {

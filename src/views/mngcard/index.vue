@@ -358,17 +358,9 @@
     list:[]
   })
   const loadDataTable = async (res) => {
-    let userList = await getCardList({ ...params, ...res });
-    currentCards.list = userList.result.data;
-    return new Promise((resolve) => {
-      let rData = {
-        list: userList.result.data,
-        page: parseInt(userList.result.pageNo),
-        pageCount: parseInt(userList.result.total / userList.result.pageSize + 1),
-        pageSize: parseInt(userList.result.pageSize)
-      }
-      resolve(rData);
-    })
+    const { result } = await getCardList({ ...params, ...res });
+    currentCards.list = result.data;
+    return result;
   };
   function reloadTable() {
     usersRef.value.reload();
